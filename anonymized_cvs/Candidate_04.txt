@@ -1,0 +1,35 @@
+[Candidate_04]
+[LOCATION_REDACTED], [Candidate_04] – 620003
+ [Candidate_04] Undergrad — [Candidate_04] — Software Developer —AI/ML Enthusiast
+ A motivated and adaptable professional eager to excel in a dynamic environment that values creativity and
+collaboration. Committed to leveraging m y skills to contribute effectively and make a meaningful impact.
+Education
+Projects
+Technical Skills
+Certifications
+SRM University Sep 2023 – May 2027
+[URL_REDACTED] – [Candidate_04] and Engineering w ith Spe cialization in Artificial Intelligence T richy, [Candidate_04]
+and [Candidate_04].
+CGPA: 9.05
+ Face Recognition Attendance system | OpenCV, Python ,SQLite Dec 2023
+Built an [LOCATION_REDACTED]-based attendance tracker using OpenCV and Python for real-time face detection.
+Designed a user-friendly GUI for seamless check-in/out.
+Improved accuracy and reduced manual effort by 30%.
+Integrated SQLite for local data storage and fast access.
+ Smart Recipe Generator May 2024
+Integrated an LLM to generate dynamic recipe suggestions from user-provided ingredients, improving
+recommendation accuracy and reducing food waste by 30%.
+ Developed a responsive Python-Django web app with features like recipe saving, user login, and personalized
+dashboards.
+Managed dynamic recipe data with MongoDB for scalable and flexible backend performance.
+Languages: Python, Java, HTML/CSS , MySQL
+Libraries/Frameworks: Django. OpenCV
+Developer/Container Tools: VS Code, Eclipse, Docker, Podman, Excel
+Platforms/Technologies: Linux, MongoDB , [Candidate_04] hat- Certified Specialist in Containers ( [DATE_REDACTED])
+[Educational Institution])
+[Candidate_04] [EMAIL_REDACTED] [PHONE_REDACTED]
+Activities
+Participated in International Conference at [Educational Institution].
+Participated in [LOCATION_REDACTED] India Hackathon o n Detecting the DDOS attack.
+President of NEURO TECH TITANS Club at SRM.
+[Candidate_04]

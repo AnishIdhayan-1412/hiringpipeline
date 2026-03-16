@@ -1,0 +1,17 @@
+JOB SUMMARY
+We are seeking a highly analytical Data Scientist to extract actionable insights from complex datasets. You will be responsible for building predictive models, designing machine learning algorithms, and automating decision-making processes to drive business growth.
+CORE RESPONSIBILITIES
+Data Mining: Extract, clean, and validate large volumes of structured and unstructured data.
+Modeling: Develop, test, and deploy machine learning models (Regression, Classification, NLP).
+Strategy: Translate technical findings into clear, visual stories and strategic recommendations for stakeholders.
+Collaboration: Work with product and engineering teams to integrate models into live environments.
+Optimization: Design and execute A/B tests to measure product performance and user behavior.
+TECHNICAL REQUIREMENTS
+Programming: Expert proficiency in Python (Pandas, Scikit-learn) and SQL.
+Mathematics: Strong background in statistics, probability, and linear algebra.
+Tools: Experience with data visualization (Tableau/Power BI) and cloud platforms (AWS/GCP/Azure).
+Education: Degree in Computer Science, Statistics, Mathematics, or a related field.
+SOFT SKILLS
+Problem-Solving: Ability to tackle open-ended business questions with curiosity.
+Communication: Excellent verbal and written skills to explain data to non-technical teams.
+Adaptability: Comfortable working in a fast-paced, iterative environment.
