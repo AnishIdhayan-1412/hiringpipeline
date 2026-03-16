@@ -1,9 +1,9 @@
 [Candidate_05]
-[REDACTED], [Candidate_05], [LOCATION_REDACTED]
+[LOCATION_REDACTED], [LOCATION_REDACTED], [LOCATION_REDACTED]
 [PHONE_REDACTED]⋄[EMAIL_REDACTED]⋄[LINKEDIN_REDACTED]
 PROFESSIONAL SUMMARY
-I am a [URL_REDACTED] student specializing in Computer Science and Engineering, with a strong interest in [LOCATION_REDACTED] Intel-
-ligence and [Candidate_05].Experienced as an intern at CDAC, working on HPC operating systems, SLURM
+I am a [URL_REDACTED] student specializing in Computer Science and Engineering, with a strong interest in Artificial Intel-
+ligence and Machine Learning.Experienced as an intern at CDAC, working on HPC operating systems, SLURM
 scheduling, and parallel programming using MPI and OpenMP. Strong academic background with a CGPA of
 9.815 and a keen interest in building scalable, real-world technology solutions.
 EDUCATION
@@ -11,7 +11,7 @@ EDUCATION
 [Educational Institution]
 CGPA: 9.815/10.00
 TECHNICAL SKILLS
-Programming LanguagesC, [Candidate_05], Java, Python, JavaScript
+Programming LanguagesC, C++, Java, Python, JavaScript
 Web TechnologiesHTML, CSS, Bootstrap, Flask, REST APIs, Node.js
 AI / Data ScienceNumPy, Pandas, Matplotlib, OpenCV
 Systems & HPCLinux, MPI, OpenMP, SLURM, Docker
@@ -19,14 +19,14 @@ ToolsGit, GitHub, IntelliJ IDEA
 Core ConceptsData Structures, OOP, [Candidate_05], Networking
 INTERNSHIP EXPERIENCE
 Project InternJune 2025 – July 2025
-Centre for Development of Advanced Computing (CDAC), [Candidate_05]
+Centre for Development of Advanced Computing (CDAC), [LOCATION_REDACTED]
 ·Contributing to the development of a High Performance Computing (HPC) operating system based on RHEL
 Linux
 ·Working with SLURM job scheduler for resource allocation and batch job execution across compute clusters
 ·Developing and benchmarking parallel programs using MPI and OpenMP
 ·Assisting in research and implementation of security policies for government-grade systems
 Web Development InternDecember
-Bevywise Networks, [REDACTED]
+Bevywise Networks, [LOCATION_REDACTED]
 ·Worked on frontend and backend development using HTML, CSS, JavaScript, and Python Flask
 ·Contributed to scalable web architecture for IoT monitoring systems
 ·Followed agile development practices and Git-based workflows

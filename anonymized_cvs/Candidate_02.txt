@@ -8,9 +8,9 @@ Python (Basic) in Hackerrank.
 Infosys. 
 MongoDB Basics. 
 ACTIVITES :
- Participated in [Candidate_02] 2.0
+ Participated in Techutsav Synergicz 2.0
 National Level Technical Symposium.
- Machine Learning Internship in [LOCATION_REDACTED] pvt
+ Machine Learning Internship in Hitasoft pvt
 ltd. 
 Web Development Basics in DCE Technology. 
 AR/[Educational Institution].[Educational Institution] 
@@ -21,9 +21,9 @@ Grades : PERCENT.1%
 HSC
 [YEAR_REDACTED]
 Grades : PERCENT%
-[Educational Institution] 
+SRM INSTITUTE OF SCIENCE AND TECHNOLOGY 
 [URL_REDACTED] - [Candidate_02] with [Candidate_02] and
-[Candidate_02]. 
+Machine Learning. 
 [YEAR_REDACTED] 
 Grades : CGPA : 8.45
 Predictive Modeling of
@@ -51,11 +51,11 @@ problems, contribute to organizational
 growth, and continuously enhance my
 technical expertise through professional
 development."
-Technical Skills - C, [Candidate_02], HTML, CSS, JS, [Candidate_02] of
+Technical Skills - C, C++, HTML, CSS, JS, Basics of
 Python, SQL, Linux.
  Libraries - Numpy, Pandas, Matplotlib, Scikit-
-[Candidate_02], [Candidate_02], React js, Django. 
-[Candidate_02] management, [Candidate_02],
+Learn, Scipy, React js, Django. 
+Soft Skills - Time management, [Candidate_02],
 Adaptability, [Candidate_02], [URL_REDACTED]ntact : [PHONE_REDACTED]
 Email : [EMAIL_REDACTED]
 [LINKEDIN_REDACTED]
@@ -65,4 +65,4 @@ Specialization.
 [Candidate_02] & Machine Learning
 Networks & Operating System
 Data Science & Analytics
-[Candidate_02]
+IoT and Emerging TechnologiesAATHITYA A

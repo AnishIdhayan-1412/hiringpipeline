@@ -4,7 +4,7 @@ gmail: [LINKEDIN_REDACTED]
 Ph.no : [PHONE_REDACTED] 
 [EMAIL_REDACTED]
 www.[LINKEDIN_REDACTED]
-Address - No. 47/120-VP kovil street, Picnahoor pet, [Candidate_06], [LOCATION_REDACTED]
+Address - No. 47/120-VP kovil street, [LOCATION_REDACTED], [LOCATION_REDACTED], [LOCATION_REDACTED]
 •Developed a forecasting model using machine learning to predict future inventory requirements.
 •Used Python, Pandas, NumPy, and Scikit ‐ learn for data preprocessing, training, and evaluation.
 •Improved stock management efficiency through accurate demand prediction.
@@ -16,7 +16,7 @@ reproducibility.
 predictive analytics and data-driven decision-making.
 •Collaborated with the team to analyze results and improve project outcomes.
 I am a [URL_REDACTED] student specializing in Comp uter Science and Engineering, with a strong interest in Operating Systems, [Candidate_06], and Low-Level Computing. Currently interning at DLK SOFTWARE SOLUTIONS, I have gained practical exposure to
-[Candidate_06], Networking, [Candidate_06], and system-level concepts. With a CGPA of 8.8, I am committed to academic
+Machine Learning, Networking, [Candidate_06], and system-level concepts. With a CGPA of 8.8, I am committed to academic
 excellence and continuous learning. I am passionate about understanding how operating systems work internally—process
 management, memory handling, file systems, and kernel-level functionalities—and I am eager to apply this knowledge to build
 efficient, scalable, and secure system solutions that create meaningful impact.
@@ -30,13 +30,15 @@ CERTIFICATIONS
 DockerScikit-learnPython
 LinuxJava
 Git
-DataAnalyticswithPython [Candidate_06],
+DataAnalyticswithPython NPTEL,
 [Candidate_06] on Python coursera - GoogleMatplotlibOperating Systems
-MStudent OrganizationmPy Pandas SRM Institute of Science and Technology, [Candidate_06] and [Candidate_06]Problem SolvingHTML/CSS Flask
+MStudent OrganizationmPy Pandas SRM Institute of Science and Technology, [Candidate_06] and Algorithms
+c++MySQL
+Problem SolvingHTML/CSS Flask
 Logical Thinking
 Supervised Machine Learning: Regression and
-ClassificationDeepLearning.[Candidate_06]
-Data Structures and [Candidate_06]
+ClassificationDeepLearning.AI Coursera - [Educational Institution]
+Data Structures and Algorithms cousera - MicrosoftMachine Learning Intern
  
 [URL_REDACTED] in Computer Science and Engineering with Specialization in Artificial 
 Intelligence and Machine LearningDLK [Educational Institution] ([Educational Institution]) - HSC -[YEAR_REDACTED]; percent %

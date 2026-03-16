@@ -1,0 +1,53 @@
+{
+  "candidate_id": "Candidate_01",
+  "parsed_at": "2026-03-16T22:51:49",
+  "sections": {
+    "summary": "Aspiring Software Engineer passionate about building real-world products in fast-paced startup environments. Experienced in full-stack development and AI-driven applications, with a strong interest in learning from industry mentors and contributing meaningfully to scalable products.",
+    "skills": {
+      "technical": [],
+      "soft": [],
+      "tools": [],
+      "languages": []
+    },
+    "experience": [],
+    "total_experience_months": 0,
+    "education": [
+      {
+        "level": "Secondary",
+        "field": "Machine Learning",
+        "institution": "[Educational Institution]",
+        "period": "2023–2025"
+      }
+    ],
+    "certifications": [
+      "Gen AI: Beyond the Chatbot – [Candidate_01] (Coursera, Jul)",
+      "AI for Everyone – [Candidate_01], DeepLearning.AI (Coursera, May 2025)",
+      "[Candidate_01] and Algorithms – Microsoft (Coursera, May 2025)",
+      "Introduction to Databases – Meta (Coursera, May)",
+      "[Candidate_01] – Self-paced training (Aug 2024)",
+      "Introduction to MongoDB (for Students) – [Educational Institution] (Aug 2024)",
+      "ServiceNow Micro-Certification – Welcome to ServiceNow (Sep)",
+      "7-Day National Level FDP on Python – [Candidate_01] (Mar 2024)",
+      "ACHIEVEMENTS & LEADERSHIP",
+      "[Candidate_01] Awardee (2023–2025) for academic excellence.",
+      "Led a 4-member project team delivering a web application for farmers.",
+      "Contributor to coding hackathons and technical events.",
+      "Athlete: [Candidate_01] Holder.",
+      "[Educational Institution] Kho-Kho team (Runner-up, divisional level).",
+      "PARTICIPATION",
+      "Participant – Flipkart GRiD 6.0 – [Candidate_01] (Level 1 E-Commerce & Tech Quiz).",
+      "Participant – AR, VR, XR Workshop ([Educational Institution] of Engineering, Tech Utsav).",
+      "Attended a workshop on Artificial Intelligence at CodeBind Technologies",
+      "Successfully completed Corporate Training Test based on Placement Aptitude questions at CodBind Technologies",
+      "HOBBIES",
+      "Reading books (technology, personal growth, fiction).",
+      "Doing calligraphy.",
+      "Doing exercise and fitness activities."
+    ],
+    "languages": []
+  },
+  "quality_score": 0.48,
+  "parse_warnings": [
+    "No experience entries could be parsed from this section"
+  ]
+}

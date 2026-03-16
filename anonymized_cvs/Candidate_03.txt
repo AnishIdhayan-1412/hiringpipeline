@@ -1,7 +1,8 @@
 [Candidate_03]
 B-Tech Computer Science student
 [PHONE_REDACTED] [EMAIL_REDACTED] [URL_REDACTED] ath0210
-26A [Candidate_03], [Candidate_03], [Candidate_03] and pr oduct-driven Computer Science student with a r esear ch focus in 
+26A arunachalam nagar, [LOCATION_REDACTED], [LOCATION_REDACTED]
+Curious and pr oduct-driven Computer Science student with a r esear ch focus in 
 Artificial Intelligence and Machine Learning (C GPA: 9.65 / 10.0). Hands-on 
 experience in de veloping AI/ML solutions and completing an internship at 
 CDAC, wher e I contributed to security enhancements in the Bhar at Oper ating 
@@ -12,21 +13,21 @@ Drug Interaction Extraction: NER and Relation
 Classification
 Built an intelligent NLP pipeline to automatically detect and analyze drug–
 drug inter actions (DDIs) from biomedical te xt. The system identifies drug 
-entities using Named [Candidate_03] and classifies their r elationships 
+entities using Named Entity Recognition and classifies their r elationships 
 (Mechanism, Effect, Advice) thr ough relation e xtraction .
 Smart Inventory Forecasting System
 Built a GUI-based (Tkinter) inventory for ecasting system with MySQL, 
-integr ating for ecasting logic, anomaly detection, and automated [Candidate_03] 
+integr ating for ecasting logic, anomaly detection, and automated lo w-stock 
 alerts.
 AI-Powered Customer Feedback Intelligence Platform
-Designed and de veloped an end-to-end [LOCATION_REDACTED] platform for r eal-time 
-customer feedback analysis b y integr ating Google 's [Candidate_03] model for 
+Designed and de veloped an end-to-end AI platform for r eal-time 
+customer feedback analysis b y integr ating Google 's Gemini Flash model for 
 high-accur acy multi-emotion detection and summarization.
 AI Dermatology Analysis Platform
 Developed a cloud-native web application for automated classification 
 of 7 types of skin lesions from dermatoscopic images using deep learning , 
-[Candidate_03] yed the system as scalable micr oservices using FastAPI , Dock er, and 
-Google [Candidate_03] , enabling preliminary diagnostic support .
+Deplo yed the system as scalable micr oservices using FastAPI , Dock er, and 
+Google Cloud Run , enabling preliminary diagnostic support .
 WhatsApp AI Personal Assistant Automation using N8N
 Built an intelligent WhatsApp personal assistant using n8n, integr ating 
 speech-to-te xt and automated workflo ws with Postgr eSQL stor age. 
@@ -35,7 +36,7 @@ commands , real-time conversation saving , and programmable custom
 responses via database queries.
 Project Intern
 CDAC (Centre for Development of 
-[Candidate_03])
+Advanced Computing)
 06/2025 - 08/2025 Chennai
 Project Intern
 Developed k ernel-le vel pr oject to str engthen 
@@ -47,13 +48,13 @@ implementation for secur e go vernment-gr ade
 systems
 Web Development Intern
 CodeBind Technologies
-12/2024 - 12/2024 [LOCATION_REDACTED] appalli
+12/2024 - 12/2024 Tiruchir appalli
 Web De velopment Intern
 Developed a r esponsive Business Management 
 System using HTML/CSS for the fr ontend and 
 PHP/MySQL for back end dynamic content 
 rendering and data management.
-TCSion Hands-on [LOCATION_REDACTED] to [LOCATION_REDACTED] for Real-
+TCSion Hands-on Approach to AI for Real-
 [Candidate_03] – IIT Kharagpur AI4ICPS
 Data Analytics with Python – NPTEL
 www .enhancv .com​P o w er ed b y•
@@ -67,10 +68,10 @@ www .enhancv .com​P o w er ed b y•
 ​
 EXPERIENCE
 CERTIFICATIONS
-SKILLSMach ine Learn ing Spec ialization – [LOCATION_REDACTED]
+SKILLSMach ine Learn ing Spec ialization – CourseraSUMMARY
 PROJECTS
 Programm ing & Scripting:
-Python, C, [Candidate_03], Java, Bash/Shell Scripting
+Python, C, C++, Java, Bash/Shell Scripting
 AI & ML:
 Backend & Cloud Too ls:
 Other S kills:Supervised & Unsupervised Learning, [Candidate_03], Clustering, [Candidate_03] (TensorFlow, PyTorch),
