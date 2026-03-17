@@ -1,41 +1,44 @@
 {
   "candidate_id": "Candidate_06",
-  "parsed_at": "2026-03-16T22:51:49",
+  "parsed_at": "2026-03-17T10:02:53",
   "sections": {
-    "summary": "",
+    "summary": "Analytical and detail-oriented Data Scientist skilled in extracting actionable insights from complex\ndatasets. Experienced in building predictive models, designing machine learning algorithms, and\ntranslating data findings into strategic recommendations to drive business growth. Strong\nbackground in statistics, Python, SQL, and data visualization tools with the ability to collaborate\neffectively with cross■functional teams.",
     "skills": {
-      "technical": [],
+      "technical": [
+        "Python",
+        "Scikit-learn",
+        "Pandas",
+        "NumPy",
+        "Matplotlib",
+        "AWS",
+        "Azure",
+        "GCP"
+      ],
       "soft": [],
-      "tools": [],
+      "tools": [
+        "Linear",
+        "Tableau",
+        "Power BI"
+      ],
       "languages": []
     },
     "experience": [],
     "total_experience_months": 0,
-    "education": [],
-    "certifications": [
-      "DockerScikit-learnPython",
-      "LinuxJava",
-      "DataAnalyticswithPython NPTEL,",
-      "[Candidate_06] on Python coursera - GoogleMatplotlibOperating Systems",
-      "MStudent OrganizationmPy Pandas SRM Institute of Science and Technology, [Candidate_06] and Algorithms",
-      "c++MySQL",
-      "Problem SolvingHTML/CSS Flask",
-      "Logical Thinking",
-      "Supervised Machine Learning: Regression and",
-      "ClassificationDeepLearning.AI Coursera - [Educational Institution]",
-      "Data Structures and Algorithms cousera - MicrosoftMachine Learning Intern",
-      "[URL_REDACTED] in Computer Science and Engineering with Specialization in Artificial",
-      "Intelligence and Machine LearningDLK [Educational Institution] ([Educational Institution]) - HSC -[YEAR_REDACTED]; percent %",
-      "[Educational Institution] ([Educational Institution]) - SSLC -[YEAR_REDACTED]; percent %",
-      "AICTE-Eduskills(AI-ML Virtual Internship)"
+    "education": [
+      {
+        "level": "B.Tech",
+        "field": "Computer Science",
+        "institution": "[Educational Institution]",
+        "period": ""
+      }
     ],
+    "certifications": [],
     "languages": []
   },
-  "quality_score": 0.22,
+  "quality_score": 0.53,
   "parse_warnings": [
-    "Section not found: summary",
     "Section not found: experience",
-    "Section not found: education",
+    "Section not found: certifications",
     "Section not found: languages"
   ]
 }

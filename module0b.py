@@ -39,6 +39,13 @@ try:
 except ImportError:
     _TQDM_AVAILABLE = False
 
+try:
+    from keybert import KeyBERT as _KeyBERT  # optional dependency
+    _KEYBERT_AVAILABLE = True
+except ImportError:  # pragma: no cover
+    _KEYBERT_AVAILABLE = False
+    _KeyBERT = None  # type: ignore[assignment,misc]
+
 # ── Module logger (lowercase — loggers are NOT constants) ──────────────────
 logger = logging.getLogger(__name__)
 
@@ -438,6 +445,11 @@ def extract_skills(section_text: str) -> Dict[str, List[str]]:
     skills like "Spring Boot", "Power BI", "Machine Learning" are matched.
     Word-boundary anchors prevent 'R' matching inside 'React', etc.
 
+    If KeyBERT is installed (optional), a second pass is performed: the
+    top keyword phrases from KeyBERT are matched against the alias map and
+    any skills not already found by the taxonomy pass are merged into the
+    result.  If KeyBERT is *not* installed, behaviour is unchanged.
+
     Args:
         section_text: Raw text of the skills section (or full CV text as
                       fallback when no explicit skills section exists).
@@ -469,6 +481,87 @@ def extract_skills(section_text: str) -> Dict[str, List[str]]:
                     seen.add(skill)
                     matched = True
                     break
+
+    # ── Optional KeyBERT second pass ─────────────────────────────────────
+    if _KEYBERT_AVAILABLE and section_text.strip():
+        found = _merge_keybert_skills(section_text, found)
+
+    return found
+
+
+# Module-level KeyBERT model instance (lazy-loaded on first use).
+_keybert_model: Optional[Any] = None
+
+
+def _get_keybert_model() -> Any:
+    """Return (and cache) the KeyBERT model instance."""
+    global _keybert_model
+    if _keybert_model is None:
+        _keybert_model = _KeyBERT()  # uses all-MiniLM-L6-v2 by default
+        logger.debug("KeyBERT model initialised")
+    return _keybert_model
+
+
+def _merge_keybert_skills(
+    section_text: str,
+    found: Dict[str, List[str]],
+) -> Dict[str, List[str]]:
+    """Run KeyBERT on *section_text* and merge new skills into *found*.
+
+    Only keywords that resolve to a canonical name in the alias map **AND**
+    are not already present in *found* are added.  Unknown free-text phrases
+    are silently ignored — this keeps the output schema identical to the
+    taxonomy-only result.
+
+    Args:
+        section_text: The raw text passed to :func:`extract_skills`.
+        found:        The dict already populated by the taxonomy pass
+                      (mutated in-place and returned).
+
+    Returns:
+        The updated *found* dict.
+    """
+    # Build a flat set of all canonical skills already captured so we can
+    # cheaply skip duplicates.
+    already: set[str] = {
+        skill
+        for skills in found.values()
+        for skill in skills
+    }
+
+    try:
+        kw_model = _get_keybert_model()
+        # Extract up to 30 keyword phrases (1- and 2-grams).
+        keywords = kw_model.extract_keywords(
+            section_text,
+            keyphrase_ngram_range=(1, 2),
+            stop_words="english",
+            top_n=30,
+            use_mmr=True,
+            diversity=0.5,
+        )
+    except Exception as exc:  # pragma: no cover
+        logger.warning("KeyBERT extraction failed: %s", exc)
+        return found
+
+    for keyword, _score in keywords:
+        kw_lower = keyword.lower().strip()
+        canonical = _SKILL_ALIASES.get(kw_lower)
+        if canonical is None:
+            continue  # phrase not in taxonomy — skip
+        if canonical in already:
+            continue  # already caught by taxonomy pass
+
+        # Find which category this canonical skill belongs to and append.
+        for category, skills in SKILLS_TAXONOMY.items():
+            if canonical in skills:
+                found[category].append(canonical)
+                already.add(canonical)
+                logger.debug(
+                    "KeyBERT added '%s' (from keyword '%s') to '%s'",
+                    canonical, keyword, category,
+                )
+                break
 
     return found
 

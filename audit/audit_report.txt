@@ -1,0 +1,279 @@
+════════════════════════════════════════════════════════════════════════════════
+                           BIAS-FREE HIRING PIPELINE                            
+                            GDPR AUDIT TRAIL REPORT                             
+                    CONFIDENTIAL — COMPLIANCE OFFICERS ONLY                     
+════════════════════════════════════════════════════════════════════════════════
+  Run ID          : RUN_20260317_100300
+  Generated       : 17 March 2026 at 10:03 UTC
+  Pipeline        : Bias-Free Hiring Pipeline v1.0.0
+  Candidates      : 7
+  Total Events    : 55
+  Warnings        : 25
+  Errors          : 0
+  GDPR Status     : ✗ PARTIAL — action required
+
+  LEGAL BASIS
+  ────────────────────────────────────────────────────────────────────────────────
+  Legitimate interest — bias prevention in recruitment (GDPR Art. 6(1)(f))
+
+  The hiring organisation acts as Data Controller. All processing is conducted
+  under the lawful basis of legitimate interest to prevent unconscious bias in
+  recruitment decisions.
+
+════════════════════════════════════════════════════════════════════════════════
+
+                           SECTION 1 — DATA INVENTORY                           
+────────────────────────────────────────────────────────────────────────────────
+
+  PERSONAL DATA PROCESSED
+  Candidate_01:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 18
+      Categories: emails: 1, phones: 1, linkedin: 1, urls_no_proto: 1,
+      full_dates: 1, ner_persons: 1, heuristic_names: 12
+    Techniques applied : contact_regex, full_date_redaction, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_02:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 10
+      Categories: emails: 1, phones: 1, linkedin: 1, urls_no_proto: 3,
+      heuristic_names: 4
+    Techniques applied : contact_regex, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_03:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 12
+      Categories: emails: 1, phones: 1, linkedin: 1, github: 1, urls: 1,
+      urls_no_proto: 1, heuristic_names: 6
+    Techniques applied : contact_regex, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_04:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 7
+      Categories: emails: 1, phones: 1, urls_no_proto: 1, full_dates: 1,
+      heuristic_names: 3
+    Techniques applied : contact_regex, full_date_redaction, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_05:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 7
+      Categories: emails: 1, phones: 1, linkedin: 1, urls_no_proto: 2,
+      heuristic_names: 2
+    Techniques applied : contact_regex, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_06:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 11
+      Categories: emails: 1, phones: 1, linkedin: 1, urls_no_proto: 1,
+      heuristic_names: 7
+    Techniques applied : contact_regex, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Candidate_07:
+    Original identity  : [REDACTED — stored in vault only]
+    PII items removed  : 10
+      Categories: emails: 1, phones: 1, linkedin: 2, urls_no_proto: 2,
+      heuristic_names: 4
+    Techniques applied : contact_regex, spacy_ner, heuristic_name_detection
+    Anonymization level: STRICT
+
+  Total PII items removed across all candidates: 75
+
+  DATA RETAINED (POST-ANONYMIZATION)
+    • Anonymized CV text   → anonymized_cvs/
+    • Structured sections  → parsed/
+    • Ranking scores       → ranking_report.txt
+    • Decision explanation → explanations/
+    • Original PII         → vault/ (encrypted, access restricted)
+
+  DATA NOT RETAINED
+    • Original CV files should be deleted from raw_cvs/ (see Art. 17 below)
+
+════════════════════════════════════════════════════════════════════════════════
+
+                      SECTION 2 — PER-CANDIDATE ACTION LOG                      
+────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_01
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('ANISH IDHAYAN I_resume.docx').
+  Anonymization:  18 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.48)
+  Ranking:        Ranked #4. Final score: 0.3364 (semantic: 0.5613, keyword: 0.0000).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_02
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('Aathi Resume Updated.pdf').
+  Anonymization:  10 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.22)
+  Ranking:        Ranked #5. Final score: 0.2787 (semantic: 0.4856, keyword: 0.0000).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_03
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('BARATHRAJ R_Doc-2.pdf').
+  Anonymization:  12 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.22)
+  Ranking:        Ranked #6. Final score: 0.2588 (semantic: 0.4508, keyword: 0.0000).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_04
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('RAMITHA A_Doc.pdf').
+  Anonymization:  7 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.34)
+  Ranking:        Ranked #7. Final score: 0.2375 (semantic: 0.4056, keyword: 0.0000).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_05
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('Vasanth Res.pdf').
+  Anonymization:  7 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.62)
+  Ranking:        Ranked #3. Final score: 0.3537 (semantic: 0.5001, keyword: 0.1429).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_06
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('data_scientist_resume.pdf').
+  Anonymization:  11 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.53)
+  Ranking:        Ranked #1. Final score: 0.6634 (semantic: 0.7903, keyword: 0.5714).
+  Decision:       Verdict — Good Match.
+                    Recommendation: Consider for interview. Good overall fit.
+                    May need support with Adaptability, Collaboration.
+
+────────────────────────────────────────────────────────────────────────────────
+  Candidate_07
+────────────────────────────────────────────────────────────────────────────────
+  Intake:         Raw CV received ('tharuneshvar(resume)Updated.pdf (10).pdf').
+  Anonymization:  10 PII item(s) removed. Validation flagged (85.0% confidence).
+  Parsing:        CV structure extracted by module0b. (0 months experience, quality=0.22)
+  Ranking:        Ranked #2. Final score: 0.3551 (semantic: 0.6186, keyword: 0.0000).
+  Decision:       Verdict — Weak Match.
+                    Recommendation: Not recommended at this stage. Significant
+                    skill gaps: AWS, Adaptability, Azure.
+
+════════════════════════════════════════════════════════════════════════════════
+
+                       SECTION 3 — DECISION TRANSPARENCY                        
+────────────────────────────────────────────────────────────────────────────────
+
+  Rank  Candidate         Score  Verdict              Sem      KW    Qual
+  ----- --------------- -------  ----------------  ------  ------  ------
+  1     Candidate_06     66.3%  Good Match        79.0%  57.1%  53.0%
+  2     Candidate_07     35.5%  Weak Match        61.9%   0.0%  22.0%
+  3     Candidate_05     35.4%  Weak Match        50.0%  14.3%  62.0%
+  4     Candidate_01     33.6%  Weak Match        56.1%   0.0%  48.0%
+  5     Candidate_02     27.9%  Weak Match        48.6%   0.0%  22.0%
+  6     Candidate_03     25.9%  Weak Match        45.1%   0.0%  22.0%
+  7     Candidate_04     23.8%  Weak Match        40.6%   0.0%  34.0%
+
+  Scoring formula:
+    final_score = (0.65 × semantic_score) + (0.35 × keyword_score)
+                × (0.85 + 0.15 × quality_score)
+    All scoring is purely based on skill and content alignment.
+    No demographic, gender, age, or protected characteristic data
+    is used at any stage of this pipeline.
+
+════════════════════════════════════════════════════════════════════════════════
+
+                     SECTION 4 — GDPR COMPLIANCE CHECKLIST                      
+────────────────────────────────────────────────────────────────────────────────
+
+  [✓] Art. 5  — Principles of processing
+      Status   : SATISFIED
+               Evidence : Vault records found for 7 candidate(s). PII categories
+               identified and removed before ranking.
+
+  [✓] Art. 13 — Right to information
+      Status   : SATISFIED
+               Evidence : Explanation generated for 7 candidate(s). Each
+               explanation includes score breakdown, verdict, and
+               recommendation.
+
+  [✗] Art. 17 — Right to erasure
+      Status   : NOT SATISFIED
+               Evidence : 7 raw CV file(s) still present in raw_cvs/. Original
+               CVs must be deleted manually to satisfy Art. 17. Action required:
+               delete all files from raw_cvs/ after processing.
+
+  [✓] Art. 22 — Automated decision-making
+      Status   : SATISFIED
+               Evidence : All 7 explanation(s) contain human-review language in
+               their recommendations.
+
+  [✓] Art. 25 — Privacy by design
+      Status   : SATISFIED
+               Evidence : Anonymization applied to 7 CV(s) by module0 (vault
+               records present). Ranking performed on anonymized text for 7
+               candidate(s). Privacy-by-design order confirmed.
+
+  [✓] Art. 30 — Records of processing
+      Status   : SATISFIED
+               Evidence : Full audit log generated at D:\6th sem
+               Project\audit\audit_log.json (run ID: RUN_20260317_100300).
+               Records of all processing activities are maintained.
+
+  ACTION REQUIRED — Non-compliant articles:
+    • Delete all files from raw_cvs/ after confirming anonymized_cvs/ are
+    complete and correct.
+
+════════════════════════════════════════════════════════════════════════════════
+
+                      SECTION 5 — DATA RETENTION SCHEDULE                       
+────────────────────────────────────────────────────────────────────────────────
+
+  Retention period  : 30 days from pipeline run date
+  Deletion deadline : 2026-04-16
+
+  Files to be reviewed / deleted by deadline:
+    • raw_cvs/          — original CVs (delete immediately after run)
+    • vault/            — PII vault (restrict access; delete on deadline)
+    • anonymized_cvs/   — may be retained longer (no PII)
+    • parsed/           — may be retained longer (no PII)
+    • explanations/     — may be retained longer (no PII)
+    • audit/            — retain permanently for compliance records
+
+════════════════════════════════════════════════════════════════════════════════
+
+                   SECTION 6 — DIGITAL SIGNATURE & INTEGRITY                    
+────────────────────────────────────────────────────────────────────────────────
+
+  The audit_log.json file has been hashed using SHA-256.
+  If the log file is modified after generation, the hash will
+  not match and the audit trail is invalidated.
+
+  File    : audit_log.json
+  SHA-256 : 68b147381e2cad92096158906cfeb4096f72dc2427520d0e20dde001e83229a4
+
+  To verify integrity, run:
+    python -c "import hashlib; print(hashlib.sha256(open('audit/audit_log.json','rb').read()).hexdigest())"
+
+  And compare the output to the hash above.
+
+════════════════════════════════════════════════════════════════════════════════
+                              END OF AUDIT REPORT                               
+════════════════════════════════════════════════════════════════════════════════

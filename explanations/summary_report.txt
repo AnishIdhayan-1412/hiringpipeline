@@ -1,0 +1,277 @@
+══════════════════════════════════════════════════════════════════════════════
+              BIAS-FREE HIRING PIPELINE — EXPLAINABILITY REPORT               
+══════════════════════════════════════════════════════════════════════════════
+  Generated      : 17 Mar 2026 at 10:03
+  Candidates     : 7
+  JD Skill Count : 14
+  Recommended    : 1 of 7  (Strong Match: 0  |  Good Match: 1)
+  Average Score  : 35%
+══════════════════════════════════════════════════════════════════════════════
+
+                               RANKED OVERVIEW                                
+──────────────────────────────────────────────────────────────────────────────
+  Rank  Candidate                Score Verdict          Skills Matched       Skills Missing
+  ----- ---------------------- ------- ---------------- -------------------- ------------------
+  1     Candidate_06               66% Good Match       AWS, Azure, GCP (+5) Adaptability, Collaboration (+4)
+  2     Candidate_07               36% Weak Match                            AWS, Adaptability (+12)
+  3     Candidate_05               35% Weak Match       Pandas, Python       AWS, Adaptability (+10)
+  4     Candidate_01               34% Weak Match                            AWS, Adaptability (+12)
+  5     Candidate_02               28% Weak Match                            AWS, Adaptability (+12)
+  6     Candidate_03               26% Weak Match                            AWS, Adaptability (+12)
+  7     Candidate_04               24% Weak Match                            AWS, Adaptability (+12)
+
+──────────────────────────────────────────────────────────────────────────────
+
+                             CANDIDATE NARRATIVES                             
+
+──────────────────────────────────────────────────────────────────────────────
+  #1  Candidate_06  |  Good Match  |  Final Score: 66%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #1 of 7 — good overall fit, limited experience on record.
+
+  Scores: semantic 79% (Good), keyword 57% (Fair), quality 53% (Fair).
+
+  Candidate has 8 of 14 required skills. Missing: Adaptability, Collaboration,
+  Communication, and 3 more.
+  Matched skills: AWS, Azure, GCP, Pandas, Power BI, Python, Scikit-learn,
+  Tableau.
+  Missing skills: Adaptability, Collaboration, Communication, Machine
+  Learning, NLP, SQL.
+
+  No experience entries could be extracted from this CV.
+  B.Tech in Computer Science
+
+  Strengths:
+        + High semantic relevance — CV content closely matches job
+      requirements
+
+  Gaps:
+        - Missing Adaptability — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - Missing Machine Learning — listed as required in JD
+        - Missing NLP — listed as required in JD
+        - ...and 1 more skill not found in CV
+        - Limited professional experience (under 1 year)
+
+  Recommendation:
+    Consider for interview. Good overall fit. May need support with
+    Adaptability, Collaboration.
+
+──────────────────────────────────────────────────────────────────────────────
+  #2  Candidate_07  |  Weak Match  |  Final Score: 36%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #2 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 62% (Good), keyword 0% (Poor), quality 22% (Poor).
+
+  Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 11 more.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Pandas, Power BI, Python, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Education details could not be extracted from this CV.
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 9 more skills not found in CV
+        - Limited professional experience (under 1 year)
+        - CV may be incomplete or poorly structured
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+──────────────────────────────────────────────────────────────────────────────
+  #3  Candidate_05  |  Weak Match  |  Final Score: 35%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #3 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 50% (Fair), keyword 14% (Poor), quality 62% (Good).
+
+  Candidate has 2 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 9 more.
+  Matched skills: Pandas, Python.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Power BI, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Degree in Computer Science (level not recorded)
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 7 more skills not found in CV
+        - Limited professional experience (under 1 year)
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+──────────────────────────────────────────────────────────────────────────────
+  #4  Candidate_01  |  Weak Match  |  Final Score: 34%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #4 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 56% (Fair), keyword 0% (Poor), quality 48% (Fair).
+
+  Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 11 more.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Pandas, Power BI, Python, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Secondary in Machine Learning
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 9 more skills not found in CV
+        - Limited professional experience (under 1 year)
+        - CV may be incomplete or poorly structured
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+──────────────────────────────────────────────────────────────────────────────
+  #5  Candidate_02  |  Weak Match  |  Final Score: 28%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #5 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 49% (Fair), keyword 0% (Poor), quality 22% (Poor).
+
+  Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 11 more.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Pandas, Power BI, Python, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Education details could not be extracted from this CV.
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 9 more skills not found in CV
+        - Limited professional experience (under 1 year)
+        - CV may be incomplete or poorly structured
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+──────────────────────────────────────────────────────────────────────────────
+  #6  Candidate_03  |  Weak Match  |  Final Score: 26%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #6 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 45% (Fair), keyword 0% (Poor), quality 22% (Poor).
+
+  Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 11 more.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Pandas, Power BI, Python, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Education details could not be extracted from this CV.
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 9 more skills not found in CV
+        - Limited professional experience (under 1 year)
+        - CV may be incomplete or poorly structured
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+──────────────────────────────────────────────────────────────────────────────
+  #7  Candidate_04  |  Weak Match  |  Final Score: 24%
+──────────────────────────────────────────────────────────────────────────────
+
+  Ranked #7 of 7 — weak match, skills are largely misaligned with
+  requirements.
+
+  Scores: semantic 41% (Fair), keyword 0% (Poor), quality 34% (Poor).
+
+  Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure,
+  and 11 more.
+  Missing skills: AWS, Adaptability, Azure, Collaboration, Communication, GCP,
+  Machine Learning, NLP, Pandas, Power BI, Python, SQL, Scikit-learn, Tableau.
+
+  No experience entries could be extracted from this CV.
+  Degree in Education (level not recorded)
+
+  Gaps:
+        - Missing AWS — listed as required in JD
+        - Missing Adaptability — listed as required in JD
+        - Missing Azure — listed as required in JD
+        - Missing Collaboration — listed as required in JD
+        - Missing Communication — listed as required in JD
+        - ...and 9 more skills not found in CV
+        - Limited professional experience (under 1 year)
+        - CV may be incomplete or poorly structured
+
+  Recommendation:
+    Not recommended at this stage. Significant skill gaps: AWS, Adaptability,
+    Azure.
+
+══════════════════════════════════════════════════════════════════════════════
+                  PIPELINE STATISTICS & SCORING METHODOLOGY                   
+══════════════════════════════════════════════════════════════════════════════
+  Strong Match  (score ≥ 75%) : 0 candidate(s)
+  Good Match    (score ≥ 55%) : 1 candidate(s)
+  Partial Match (score ≥ 40%) : 0 candidate(s)
+  Weak Match    (score <  40%) : 6 candidate(s)
+  Average final score              : 35%
+  Recommended for interview        : 1 of 7 (14%)
+
+  HOW SCORES ARE CALCULATED
+  ────────────────────────────────────────────────────────────────────────────
+  final_score  =  (0.65 × semantic_score)
+               +  (0.35 × keyword_score)
+               ×  (0.85 + 0.15 × quality_score)
+
+  semantic_score  — cosine similarity (SBERT) between the job
+                    description and the anonymized CV text.
+  keyword_score   — fraction of JD-extracted skills found in the
+                    candidate's structured skill list (module0b).
+  quality_score   — CV completeness signal from module0b,
+                    reflecting section coverage and skill depth.
+  quality_weight  — a ±15% multiplier rewarding complete CVs.
+
+  All candidate identifiers are anonymized by module0. Scores
+  are algorithmic signals only and must be reviewed by a qualified
+  human decision-maker before any hiring action is taken.
+══════════════════════════════════════════════════════════════════════════════
+                                END OF REPORT                                 
+══════════════════════════════════════════════════════════════════════════════

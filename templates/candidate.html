@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block title %}{{ candidate.candidate_id }}{% endblock %}
+{% block page_title %}Candidate Detail{% endblock %}
+
+{% block content %}
+
+{% set exp    = candidate.get('explanation', {}) %}
+{% set bd     = exp.get('score_breakdown', {}) %}
+{% set sk     = exp.get('skills', {}) %}
+{% set xp     = exp.get('experience', {}) %}
+{% set edu    = exp.get('education', {}) %}
+{% set strengths = exp.get('strengths', []) %}
+{% set gaps      = exp.get('gaps', []) %}
+{% set rec       = exp.get('recommendation', '') %}
+{% set fs     = candidate.get('final_score', 0) %}
+{% set v      = candidate.get('verdict', '') %}
+
+<!-- ── Back nav & candidate navigation ────────────────────────── -->
+<div class="flex-between mb-16">
+  <a href="{{ url_for('rankings') }}"
+     class="topbar-btn btn-secondary btn-sm">
+    ← Back to Rankings
+  </a>
+  <div class="cand-nav">
+    {% if prev_id %}
+    <a href="/candidate/{{ prev_id }}">‹ {{ prev_id }}</a>
+    {% endif %}
+    <span style="padding:7px 12px; color:#888; font-size:13px;">
+      #{{ candidate.get('rank','?') }} of {{ total }}
+    </span>
+    {% if next_id %}
+    <a href="/candidate/{{ next_id }}">{{ next_id }} ›</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── Candidate Header ───────────────────────────────────────── -->
+<div class="card mb-16">
+  <div class="card-body">
+    <div class="flex-between">
+      <div>
+        <div style="font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:6px;">
+          {{ candidate.candidate_id }}
+          <span class="badge
+            {% if v == 'Strong Match' %}badge-strong
+            {% elif v == 'Good Match' %}badge-good
+            {% elif v == 'Partial Match' %}badge-partial
+            {% else %}badge-weak{% endif %}"
+            style="font-size:13px; vertical-align:middle; margin-left:10px;">
+            {{ v }}
+          </span>
+        </div>
+        <div class="text-muted" style="font-size:14px;">
+          {{ candidate.get('headline', '') }}
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:36px; font-weight:800;
+          {% if fs >= 0.75 %}color:#2e7d32
+          {% elif fs >= 0.55 %}color:#1565c0
+          {% elif fs >= 0.40 %}color:#e65100
+          {% else %}color:#b71c1c{% endif %}">
+          {{ "%.0f"|format(fs * 100) }}%
+        </div>
+        <div class="text-muted text-sm">Final Score</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Score Breakdown + Skills (side by side) ────────────────── -->
+<div class="grid-2 mb-16">
+
+  <!-- Score Breakdown -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Score Breakdown</div></div>
+    <div class="card-body">
+      {% set scores = [
+        ('Final Score',     bd.get('final_score', {}).get('value', fs),    'bar-final'),
+        ('Semantic',        bd.get('semantic_score', {}).get('value', 0),  'bar-semantic'),
+        ('Keyword Match',   bd.get('keyword_score', {}).get('value', 0),   'bar-keyword'),
+        ('CV Quality',      bd.get('quality_score', {}).get('value', 0),   'bar-quality'),
+      ] %}
+      {% for label, val, cls in scores %}
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">{{ label }}</span>
+          <span class="progress-value
+            {% if val >= 0.75 %}score-strong
+            {% elif val >= 0.55 %}score-good
+            {% elif val >= 0.40 %}score-partial
+            {% else %}score-weak{% endif %}">
+            {{ "%.0f"|format(val * 100) }}%
+          </span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar {{ cls }}"
+               style="width:{{ "%.1f"|format(val * 100) }}%">
+          </div>
+        </div>
+        {% if label != 'Final Score' %}
+        {% set note_key = label|lower|replace(' match','') ~ '_score' %}
+        {% set note = bd.get(label|lower|replace(' ','_')|replace('cv_','quality_'), {}).get('note','') %}
+        {% if not note and label == 'Semantic' %}
+          {% set note = bd.get('semantic_score', {}).get('note','') %}
+        {% elif not note and label == 'Keyword Match' %}
+          {% set note = bd.get('keyword_score', {}).get('note','') %}
+        {% elif not note and label == 'CV Quality' %}
+          {% set note = bd.get('quality_score', {}).get('note','') %}
+        {% endif %}
+        {% if note %}
+        <div class="text-muted text-sm" style="margin-top:3px;">{{ note }}</div>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Skills Analysis</div>
+    </div>
+    <div class="card-body">
+      <div class="mb-8" style="font-size:13px; color:#666;">
+        {{ sk.get('summary', '') }}
+      </div>
+
+      {% set matched = sk.get('matched', []) %}
+      {% set missing = sk.get('missing', []) %}
+
+      {% if matched %}
+      <div class="mb-8">
+        <div class="text-sm fw-600 mb-4" style="color:#2e7d32;">
+          ✓ Matched ({{ matched|length }})
+        </div>
+        {% for skill in matched %}
+        <span class="skill-pill pill-green">{{ skill }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if missing %}
+      <div style="margin-top:10px;">
+        <div class="text-sm fw-600 mb-4" style="color:#b71c1c;">
+          ✗ Missing ({{ missing|length }})
+        </div>
+        {% for skill in missing %}
+        <span class="skill-pill pill-red">{{ skill }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if not matched and not missing %}
+      <div class="text-muted text-sm">No skill data available.</div>
+      {% endif %}
+
+      <div style="margin-top:14px; padding-top:12px; border-top:1px solid #f5f5f5;">
+        <span class="text-sm text-muted">Match rate: </span>
+        <strong>{{ sk.get('match_rate', '—') }}</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Experience, Education, Certifications ───────────────────── -->
+<div class="grid-2 mb-16">
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Experience</div></div>
+    <div class="card-body">
+      <div style="font-size:13.5px; color:#444; line-height:1.6;">
+        {{ xp.get('summary', 'No data available.') }}
+      </div>
+      {% if xp.get('total_months', 0) > 0 %}
+      <div style="margin-top:12px; display:flex; gap:20px;">
+        <div>
+          <div style="font-size:22px; font-weight:700; color:#1a1a2e;">
+            {{ xp.get('total_years', '—') }}
+          </div>
+          <div class="text-sm text-muted">Years</div>
+        </div>
+        <div>
+          <div style="font-size:22px; font-weight:700; color:#1a1a2e;">
+            {{ xp.get('total_months', 0) }}
+          </div>
+          <div class="text-sm text-muted">Months</div>
+        </div>
+        {% if xp.get('roles_detected') %}
+        <div>
+          <div style="font-size:22px; font-weight:700; color:#1a1a2e;">
+            {{ xp.get('roles_detected', 0) }}
+          </div>
+          <div class="text-sm text-muted">Roles</div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Education</div></div>
+    <div class="card-body">
+      <div style="font-size:13.5px; color:#444; line-height:1.6;">
+        {{ edu.get('summary', 'No data available.') }}
+      </div>
+      {% if edu.get('highest_level') %}
+      <div style="margin-top:12px;">
+        <span class="badge badge-info" style="font-size:13px; padding:5px 14px;">
+          {{ edu.get('highest_level','') }}
+          {% if edu.get('field') %} — {{ edu.get('field','') }}{% endif %}
+        </span>
+      </div>
+      {% endif %}
+      {% set certs = exp.get('certifications', {}) %}
+      {% if certs.get('count', 0) > 0 %}
+      <div style="margin-top:12px; padding-top:10px; border-top:1px solid #f5f5f5;">
+        <div class="text-sm fw-600 mb-4">Certifications ({{ certs.count }})</div>
+        {% for cert in certs.get('entries', [])[:4] %}
+        <div class="text-sm" style="padding:3px 0; color:#444;">
+          🏅 {{ cert }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Strengths & Gaps ────────────────────────────────────────── -->
+<div class="grid-2 mb-16">
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Strengths</div></div>
+    <div class="card-body">
+      {% if strengths %}
+      <ul class="bullet-list">
+        {% for s in strengths %}
+        <li class="bullet-green">
+          <span class="bicon">✓</span>
+          <span>{{ s }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="text-muted text-sm">No strengths data available.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Gaps &amp; Concerns</div></div>
+    <div class="card-body">
+      {% if gaps %}
+      <ul class="bullet-list">
+        {% for g in gaps %}
+        <li class="bullet-amber">
+          <span class="bicon">⚠</span>
+          <span>{{ g }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="text-muted text-sm">No gaps identified.</div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Recommendation ──────────────────────────────────────────── -->
+<div class="card mb-16">
+  <div class="card-header"><div class="card-title">HR Recommendation</div></div>
+  <div class="card-body">
+    {% if rec %}
+    <div class="rec-box
+      {% if v == 'Strong Match' %}
+      {% elif v == 'Good Match' %}info
+      {% elif v == 'Partial Match' %}warning
+      {% else %}danger{% endif %}">
+      {{ rec }}
+    </div>
+    {% else %}
+    <div class="text-muted">No recommendation available.</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── Footer nav ─────────────────────────────────────────────── -->
+<div class="flex-between">
+  <a href="{{ url_for('rankings') }}" class="topbar-btn btn-secondary">
+    ← Back to Rankings
+  </a>
+  <div class="cand-nav">
+    {% if prev_id %}
+    <a href="/candidate/{{ prev_id }}">‹ {{ prev_id }}</a>
+    {% endif %}
+    {% if next_id %}
+    <a href="/candidate/{{ next_id }}">{{ next_id }} ›</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

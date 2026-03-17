@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ── Stat Cards ─────────────────────────────────────────────── -->
+<div class="stat-grid mb-24">
+  <div class="stat-card">
+    <div class="stat-icon green">👥</div>
+    <div>
+      <div class="stat-value">{{ stats.total_cvs }}</div>
+      <div class="stat-label">Candidates Processed</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon blue">🏆</div>
+    <div>
+      <div class="stat-value" style="font-size:18px">{{ stats.top_candidate }}</div>
+      <div class="stat-label">
+        Top Candidate
+        {% if stats.top_score > 0 %}
+        — <strong>{{ "%.0f"|format(stats.top_score * 100) }}%</strong>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon {% if stats.gdpr_status == 'Compliant' %}green{% elif stats.gdpr_status == 'Not Compliant' %}amber{% else %}purple{% endif %}">🔒</div>
+    <div>
+      <div class="stat-value" style="font-size:17px;
+        {% if stats.gdpr_status == 'Compliant' %}color:#2e7d32
+        {% elif stats.gdpr_status == 'Not Compliant' %}color:#e65100
+        {% else %}color:#888{% endif %}">
+        {{ stats.gdpr_status }}
+      </div>
+      <div class="stat-label">GDPR Status</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon {% if 'NO BIAS' in stats.bias_verdict %}green{% elif 'BIAS RISK' in stats.bias_verdict %}amber{% else %}purple{% endif %}">⚖</div>
+    <div>
+      <div class="stat-value" style="font-size:14px;
+        {% if 'NO BIAS' in stats.bias_verdict %}color:#2e7d32
+        {% elif 'BIAS RISK' in stats.bias_verdict %}color:#e65100
+        {% else %}color:#888{% endif %}">
+        {{ stats.bias_verdict[:22] }}{% if stats.bias_verdict|length > 22 %}…{% endif %}
+      </div>
+      <div class="stat-label">Bias Audit</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Pipeline Stage Visual ──────────────────────────────────── -->
+<div class="mb-16">
+  <div class="flex-between mb-8">
+    <div class="section-title" style="font-size:15px">Pipeline Stages</div>
+    {% if stats.last_run %}
+    <span class="text-sm text-muted">Last run: {{ stats.last_run }}</span>
+    {% endif %}
+  </div>
+  <div class="pipeline-stages">
+    {% set stage_icons = {
+      'anonymization': '🔐',
+      'parsing': '📝',
+      'ranking': '📊',
+      'explainability': '💬',
+      'audit': '📋',
+      'bias': '⚖'
+    } %}
+    {% for key, info in status.items() %}
+    <div class="pipeline-stage {% if info.done %}done{% else %}pending{% endif %}">
+      <div class="ps-icon">{{ stage_icons.get(key, '⚙') }}</div>
+      <div class="ps-label">{{ info.label }}</div>
+      <div class="ps-state {% if info.done %}done{% else %}pending{% endif %}">
+        {% if info.done %}✓ Done{% else %}Not run{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── Main Content Grid ───────────────────────────────────────── -->
+<div class="grid-2">
+
+  <!-- Quick Actions -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Quick Actions</div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <a href="{{ url_for('upload') }}" class="topbar-btn btn-primary"
+           style="justify-content:center; padding:12px;">
+          ▶&nbsp; Run Full Pipeline
+        </a>
+        <a href="{{ url_for('rankings') }}" class="topbar-btn btn-secondary"
+           style="justify-content:center; padding:12px;">
+          🏆&nbsp; View Rankings
+        </a>
+        <a href="{{ url_for('audit') }}" class="topbar-btn btn-secondary"
+           style="justify-content:center; padding:12px;">
+          🔒&nbsp; Audit &amp; Compliance
+        </a>
+        <a href="/api/download/ranking-csv" class="topbar-btn btn-blue"
+           style="justify-content:center; padding:12px;">
+          ⬇&nbsp; Download Shortlist CSV
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage Status Detail -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Stage Detail</div>
+    </div>
+    <div class="card-body" style="padding-top:12px;">
+      {% for key, info in status.items() %}
+      <div class="status-row">
+        <span class="status-icon">{% if info.done %}✅{% else %}⬜{% endif %}</span>
+        <span class="status-label">{{ info.label }}</span>
+        {% if info.done %}
+        <span class="status-badge badge-success badge">Done</span>
+        {% else %}
+        <span class="status-badge badge-grey badge">Pending</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<!-- ── JD Status ──────────────────────────────────────────────── -->
+{% if not stats.jd_loaded %}
+<div class="alert alert-warning mt-24">
+  ⚠ No job description file found (<code>jd.txt</code>).
+  <a href="{{ url_for('upload') }}" style="font-weight:600;color:inherit;">
+    Upload a JD
+  </a> before running the pipeline.
+</div>
+{% else %}
+<div class="alert alert-success mt-24">
+  ✓ Job description loaded. Ready to run the pipeline.
+  <a href="{{ url_for('upload') }}" style="font-weight:600;color:inherit;">
+    Update JD
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

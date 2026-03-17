@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Rankings{% endblock %}
+{% block page_title %}Candidate Rankings{% endblock %}
+
+{% block content %}
+
+<!-- ── Toolbar ─────────────────────────────────────────────────── -->
+<div class="flex-between mb-16">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <span class="text-muted" style="font-size:13px;">
+      Showing <strong>{{ candidates|length }}</strong>
+      {% if active_filter != 'all' %}filtered{% endif %}
+      of <strong>{{ all_candidates|length }}</strong> candidates
+    </span>
+    <!-- Filter dropdown -->
+    <form method="get" style="display:flex; align-items:center; gap:8px;">
+      <label style="font-size:13px; color:#666;">Filter:</label>
+      <select class="filter-select" name="filter"
+              onchange="this.form.submit()">
+        <option value="all" {% if active_filter=='all' %}selected{% endif %}>
+          All Verdicts
+        </option>
+        {% for v in verdicts %}
+        <option value="{{ v|lower|replace(' ','_') }}"
+          {% if active_filter == v|lower|replace(' ','_') %}selected{% endif %}>
+          {{ v }}
+        </option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div style="display:flex; gap:10px;">
+    <a href="/api/download/ranking-csv"
+       class="topbar-btn btn-blue btn-sm">
+      ⬇ Export CSV
+    </a>
+    {% if active_filter != 'all' %}
+    <a href="{{ url_for('rankings') }}"
+       class="topbar-btn btn-secondary btn-sm">
+      ✕ Clear Filter
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── Rankings Table ──────────────────────────────────────────── -->
+{% if candidates %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:52px">Rank</th>
+          <th>Candidate</th>
+          <th style="width:90px">Score</th>
+          <th style="width:140px">Verdict</th>
+          <th style="width:90px">Semantic</th>
+          <th style="width:90px">Keyword</th>
+          <th style="width:90px">Quality</th>
+          <th>Skills Matched</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in candidates %}
+        {% set exp  = c.get('explanation', {}) %}
+        {% set bd   = exp.get('score_breakdown', {}) %}
+        {% set sk   = exp.get('skills', {}) %}
+        {% set fs   = c.get('final_score', 0) %}
+        {% set v    = c.get('verdict', '') %}
+        <tr style="cursor:pointer"
+            onclick="window.location='/candidate/{{ c.candidate_id }}'">
+          <td class="td-rank">{{ c.get('rank','—') }}</td>
+          <td class="td-candidate">
+            {{ c.candidate_id }}
+            {% if c.get('rank') == 1 %}
+            <span style="font-size:12px;margin-left:4px">🥇</span>
+            {% elif c.get('rank') == 2 %}
+            <span style="font-size:12px;margin-left:4px">🥈</span>
+            {% elif c.get('rank') == 3 %}
+            <span style="font-size:12px;margin-left:4px">🥉</span>
+            {% endif %}
+          </td>
+          <td class="td-score
+            {% if fs >= 0.75 %}score-strong
+            {% elif fs >= 0.55 %}score-good
+            {% elif fs >= 0.40 %}score-partial
+            {% else %}score-weak{% endif %}">
+            {{ "%.0f"|format(fs * 100) }}%
+          </td>
+          <td>
+            <span class="badge
+              {% if v == 'Strong Match' %}badge-strong
+              {% elif v == 'Good Match' %}badge-good
+              {% elif v == 'Partial Match' %}badge-partial
+              {% else %}badge-weak{% endif %}">
+              {{ v or '—' }}
+            </span>
+          </td>
+          <td class="text-muted">
+            {% set sem = bd.get('semantic_score', {}).get('value', 0) %}
+            {{ "%.0f"|format(sem * 100) }}%
+          </td>
+          <td class="text-muted">
+            {% set kw = bd.get('keyword_score', {}).get('value', 0) %}
+            {{ "%.0f"|format(kw * 100) }}%
+          </td>
+          <td class="text-muted">
+            {% set qual = bd.get('quality_score', {}).get('value', 0) %}
+            {{ "%.0f"|format(qual * 100) }}%
+          </td>
+          <td>
+            {% set matched = sk.get('matched', []) %}
+            {% for skill in matched[:4] %}
+            <span class="skill-pill pill-green">{{ skill }}</span>
+            {% endfor %}
+            {% if matched|length > 4 %}
+            <span class="text-muted text-sm">+{{ matched|length - 4 }}</span>
+            {% endif %}
+            {% if not matched %}
+            <span class="text-muted text-sm">None</span>
+            {% endif %}
+          </td>
+          <td style="text-align:center; color:#999; font-size:16px;">›</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Legend ─────────────────────────────────────────────────── -->
+<div style="margin-top:14px; display:flex; gap:16px; flex-wrap:wrap;">
+  <span class="text-sm text-muted">Verdicts:</span>
+  <span class="badge badge-strong">Strong Match ≥75%</span>
+  <span class="badge badge-good">Good Match ≥55%</span>
+  <span class="badge badge-partial">Partial Match ≥40%</span>
+  <span class="badge badge-weak">Weak Match &lt;40%</span>
+</div>
+
+{% else %}
+<div class="card">
+  <div class="card-body" style="text-align:center; padding: 48px 20px;">
+    <div style="font-size:48px; margin-bottom:16px;">📭</div>
+    <div style="font-size:16px; font-weight:600; color:#444; margin-bottom:8px;">
+      No candidates found
+    </div>
+    <div class="text-muted" style="margin-bottom:20px;">
+      {% if active_filter != 'all' %}
+        No candidates match the "{{ active_filter|replace('_',' ')|title }}" filter.
+        <a href="{{ url_for('rankings') }}">Clear filter</a>
+      {% else %}
+        Run the pipeline first to generate rankings.
+      {% endif %}
+    </div>
+    <a href="{{ url_for('upload') }}" class="topbar-btn btn-primary">
+      ▶ Run Pipeline
+    </a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+/* Make full row clickable without breaking ctrl+click */
+document.querySelectorAll('tbody tr').forEach(function(row) {
+  row.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') return;
+    var href = row.getAttribute('onclick');
+    if (!href) return;
+  });
+});
+</script>
+{% endblock %}

@@ -49,7 +49,7 @@ def _setup_tesseract() -> None:
     try:
         result = os.popen('where tesseract' if os.name == 'nt' else 'which tesseract').read().strip()
         if result:
-            pytesseract.pytesseract.pytesseract_cmd = result
+            pytesseract.pytesseract.tesseract_cmd = result
             logger.debug("Tesseract found in PATH: %s", result)
             return
     except Exception:
@@ -1183,42 +1183,41 @@ def run(
         progress_iter = enumerate(cv_files, start=1)
 
     error_log_path = os.path.join(output_dir, "error_log.txt")
-    error_log = open(error_log_path, "w", encoding="utf-8")
+    with open(error_log_path, "w", encoding="utf-8") as error_log:
 
-    for idx, fname in progress_iter:
-        candidate_id = f"Candidate_{idx:02d}"
-        cv_path = os.path.join(input_dir, fname)
-        try:
-            cv_text = read_cv_file(cv_path)
-            if not cv_text.strip():
-                logger.warning("Skipped empty file: %s", fname)
-                error_log.write(f"SKIPPED (empty): {fname}\n")
-                continue
+        for idx, fname in progress_iter:
+            candidate_id = f"Candidate_{idx:02d}"
+            cv_path = os.path.join(input_dir, fname)
+            try:
+                cv_text = read_cv_file(cv_path)
+                if not cv_text.strip():
+                    logger.warning("Skipped empty file: %s", fname)
+                    error_log.write(f"SKIPPED (empty): {fname}\n")
+                    continue
 
-            result = anonymizer.anonymize(cv_text, candidate_id=candidate_id, level=level)
+                result = anonymizer.anonymize(cv_text, candidate_id=candidate_id, level=level)
 
-            with open(os.path.join(output_dir, f"{candidate_id}.txt"), 'w', encoding='utf-8') as f:
-                f.write(result['anonymized_cv'])
+                with open(os.path.join(output_dir, f"{candidate_id}.txt"), 'w', encoding='utf-8') as f:
+                    f.write(result['anonymized_cv'])
 
-            vault_data = result['vault_data']
-            vault_data['original_filename'] = fname
-            # Add validation report
-            vault_data['validation_report'] = validate_pii_removal(result['anonymized_cv'])
-            # Standardize vault keys
-            for key in ['candidate_id', 'original_name', 'contact_info', 'publications', 'pii_categories_found', 'anonymization_level_used', 'techniques_applied', 'validation_score', 'original_filename', 'validation_report']:
-                if key not in vault_data:
-                    vault_data[key] = None
-            with open(os.path.join(vault_dir, f"{candidate_id}.json"), 'w', encoding='utf-8') as f:
-                json.dump(vault_data, f, indent=2, ensure_ascii=False)
+                vault_data = result['vault_data']
+                vault_data['original_filename'] = fname
+                # Add validation report
+                vault_data['validation_report'] = validate_pii_removal(result['anonymized_cv'])
+                # Standardize vault keys
+                for key in ['candidate_id', 'original_name', 'contact_info', 'publications', 'pii_categories_found', 'anonymization_level_used', 'techniques_applied', 'validation_score', 'original_filename', 'validation_report']:
+                    if key not in vault_data:
+                        vault_data[key] = None
+                with open(os.path.join(vault_dir, f"{candidate_id}.json"), 'w', encoding='utf-8') as f:
+                    json.dump(vault_data, f, indent=2, ensure_ascii=False)
 
-            master_vault[candidate_id] = vault_data
-            success += 1
-        except Exception as exc:
-            failed_files.append(fname)
-            logger.error("Failed to process '%s': %s", fname, exc, exc_info=True)
-            error_log.write(f"FAILED ({fname}): {exc}\n")
+                master_vault[candidate_id] = vault_data
+                success += 1
+            except Exception as exc:
+                failed_files.append(fname)
+                logger.error("Failed to process '%s': %s", fname, exc, exc_info=True)
+                error_log.write(f"FAILED ({fname}): {exc}\n")
 
-    error_log.close()
 
     # Master vault
     master_path = os.path.join(vault_dir, "vault_master.json")

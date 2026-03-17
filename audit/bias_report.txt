@@ -1,0 +1,64 @@
+================================================================================
+  BIAS-FREE HIRING PIPELINE — BIAS DETECTION & FAIRNESS AUDIT
+  Generated : 17 March 2026 at 04:33 UTC
+  Candidates: 7
+  Checks run: 7
+  Flags raised: 1
+================================================================================
+
+  OVERALL VERDICT: BIAS RISK DETECTED
+
+────────────────────────────────────────────────────────────────────────────────
+  INDIVIDUAL CHECKS
+────────────────────────────────────────────────────────────────────────────────
+
+  1. Score Distribution
+     Status : ✓  OK
+     Note   : Final scores range 24%–66%, mean 35%, σ=0.133.
+
+  2. Score Compression
+     Status : ✓  OK
+     Note   : Score spread = 0.426 (>= 0.1 threshold). Spread is sufficient to
+              differentiate candidates.
+
+  3. Skill-Gap Disparity
+     Status : ⚠  FLAGGED
+     Note   : 5 candidate(s) matched zero JD skills: Candidate_07,
+              Candidate_01, Candidate_02, Candidate_03, Candidate_04. These
+              candidates were ranked using semantic similarity only — verify
+              that their CVs are not systematically disadvantaged by skill
+              vocabulary.
+
+  4. Semantic vs Keyword Gap
+     Status : ✓  OK
+     Note   : Top candidate Candidate_06: semantic=79%, keyword=57%, gap=0.219.
+              Semantic and keyword scores are consistent for the top candidate.
+
+  5. Experience Proxy Bias
+     Status : ✓  OK
+     Note   : Pearson r(experience, rank) = 0.000 (|r|=0.000, threshold=0.85).
+              Experience–rank correlation is within acceptable bounds
+              (|r|=0.000).
+
+  6. CV Quality Score Influence
+     Status : ✓  OK
+     Note   : Quality score spread = 0.400 (<= 0.5). CV quality score spread is
+              within acceptable bounds.
+
+  7. Parsed Data Coverage
+     Status : ✓  OK
+     Note   : All ranked candidates have corresponding parsed JSON files.
+
+────────────────────────────────────────────────────────────────────────────────
+  RECOMMENDATIONS
+────────────────────────────────────────────────────────────────────────────────
+
+  1 fairness flag(s) were raised. Review the flagged checks above before sharing ranking results with hiring stakeholders.
+
+  • Skill-Gap Disparity: 5 candidate(s) matched zero JD skills: Candidate_07, Candidate_01, Candidate_02, Candidate_03, Candidate_04. These candi
+
+  This report does not constitute a definitive finding of bias. Flags indicate statistical patterns that warrant human review.
+
+================================================================================
+  END OF BIAS AUDIT REPORT
+================================================================================

@@ -1,46 +1,40 @@
 [Candidate_06]
-Computer Science Student
-gmail: [LINKEDIN_REDACTED]
-Ph.no : [PHONE_REDACTED] 
-[EMAIL_REDACTED]
-www.[LINKEDIN_REDACTED]
-Address - No. 47/120-VP kovil street, [LOCATION_REDACTED], [LOCATION_REDACTED], [LOCATION_REDACTED]
-•Developed a forecasting model using machine learning to predict future inventory requirements.
-•Used Python, Pandas, NumPy, and Scikit ‐ learn for data preprocessing, training, and evaluation.
-•Improved stock management efficiency through accurate demand prediction.
-•Enabled data-driven decision-making for inventory planning, reducing manual errors and improving operational reliability.•Worked on data preprocessing, feature engineering, model selection, training, and evaluation using Python, Pandas, 
-NumPy, and Scikit-learn.
-•Documented workflows, maintained version control using Git, and followed best practices in code and model 
-reproducibility.
-•Contributed to the development and deployment of ML models for real-world business applications, including 
-predictive analytics and data-driven decision-making.
-•Collaborated with the team to analyze results and improve project outcomes.
-I am a [URL_REDACTED] student specializing in Comp uter Science and Engineering, with a strong interest in Operating Systems, [Candidate_06], and Low-Level Computing. Currently interning at DLK SOFTWARE SOLUTIONS, I have gained practical exposure to
-Machine Learning, Networking, [Candidate_06], and system-level concepts. With a CGPA of 8.8, I am committed to academic
-excellence and continuous learning. I am passionate about understanding how operating systems work internally—process
-management, memory handling, file systems, and kernel-level functionalities—and I am eager to apply this knowledge to build
-efficient, scalable, and secure system solutions that create meaningful impact.
-SKILLSSUMMARY
-PROJECTS
-AI‐IntegratedInventory Forecasting System EDUCATION
-2023 - 2027EXPERIENCE
-05/2025 - 06/2025
-CERTIFICATIONS
- C
-DockerScikit-learnPython
-LinuxJava
-Git
-DataAnalyticswithPython NPTEL,
-[Candidate_06] on Python coursera - GoogleMatplotlibOperating Systems
-MStudent OrganizationmPy Pandas SRM Institute of Science and Technology, [Candidate_06] and Algorithms
-c++MySQL
-Problem SolvingHTML/CSS Flask
-Logical Thinking
-Supervised Machine Learning: Regression and
-ClassificationDeepLearning.AI Coursera - [Educational Institution]
-Data Structures and Algorithms cousera - MicrosoftMachine Learning Intern
- 
-[URL_REDACTED] in Computer Science and Engineering with Specialization in Artificial 
-Intelligence and Machine LearningDLK [Educational Institution] ([Educational Institution]) - HSC -[YEAR_REDACTED]; percent %
-[Educational Institution] ([Educational Institution]) - SSLC -[YEAR_REDACTED]; percent %
-AICTE-Eduskills(AI-ML Virtual Internship)
+ No. 42, 3rd Cross, [Candidate_06], [LOCATION_REDACTED], [LOCATION_REDACTED] 560066, [LOCATION_REDACTED]
+Phone: [PHONE_REDACTED] | Email: [EMAIL_REDACTED] | [LINKEDIN_REDACTED]
+Professional Summary
+Analytical and detail-oriented Data Scientist skilled in extracting actionable insights from complex
+datasets. Experienced in building predictive models, designing machine learning algorithms, and
+translating data findings into strategic recommendations to drive business growth. Strong
+background in statistics, Python, SQL, and data visualization tools with the ability to collaborate
+effectively with cross■functional teams.
+Technical Skills
+Programming
+Python (Pandas, NumPy, Scikit-learn), SQL
+Machine Learning
+Regression, Classification, NLP, [Candidate_06], Probability, Linear Algebra
+Visualization
+Tableau, Power BI, Matplotlib, [Candidate_06]
+AWS, [Candidate_06] (GCP), Microsoft Azure
+Other
+Data Cleaning, [Candidate_06], A/B Testing, [Candidate_06] & Experience
+ Extracted, cleaned, and validated large structured and unstructured datasets for analysis.
+ Developed and deployed machine learning models including regression, classification, and NLP
+solutions.
+ Translated technical insights into visual dashboards and clear business strategies for
+stakeholders.
+ Collaborated with product and engineering teams to integrate machine learning models into
+production systems.
+ Designed and executed A/B testing experiments to measure product performance and user
+behavior.
+Education
+Bachelor of Technology ([URL_REDACTED]) in Computer Science – [Candidate_06] & Machine Learning
+[Educational Institution] (VTU), [LOCATION_REDACTED]
+Expected Graduation: 
+Projects
+ Customer Churn Prediction Model using Python and Scikit-learn improving prediction accuracy
+using feature engineering.
+ Sentiment Analysis System using NLP techniques to classify customer feedback from social
+media data.
+
+ Interactive Data Visualization Dashboard built with Tableau to track business KPIs and user
+[Candidate_06]

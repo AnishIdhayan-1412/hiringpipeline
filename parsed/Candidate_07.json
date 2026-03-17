@@ -1,0 +1,41 @@
+{
+  "candidate_id": "Candidate_07",
+  "parsed_at": "2026-03-17T10:02:53",
+  "sections": {
+    "summary": "",
+    "skills": {
+      "technical": [],
+      "soft": [],
+      "tools": [],
+      "languages": []
+    },
+    "experience": [],
+    "total_experience_months": 0,
+    "education": [],
+    "certifications": [
+      "DockerScikit-learnPython",
+      "LinuxJava",
+      "DataAnalyticswithPython NPTEL,",
+      "[Candidate_07] on Python coursera - GoogleMatplotlibOperating Systems",
+      "MStudent OrganizationmPy Pandas SRM Institute of Science and Technology, [Candidate_07] and Algorithms",
+      "c++MySQL",
+      "Problem SolvingHTML/CSS Flask",
+      "Logical Thinking",
+      "Supervised Machine Learning: Regression and",
+      "ClassificationDeepLearning.AI Coursera - [Educational Institution]",
+      "Data Structures and Algorithms cousera - MicrosoftMachine Learning Intern",
+      "[URL_REDACTED] in Computer Science and Engineering with Specialization in Artificial",
+      "Intelligence and Machine LearningDLK [Educational Institution] ([Educational Institution]) - HSC -[YEAR_REDACTED]; percent %",
+      "[Educational Institution] ([Educational Institution]) - SSLC -[YEAR_REDACTED]; percent %",
+      "AICTE-Eduskills(AI-ML Virtual Internship)"
+    ],
+    "languages": []
+  },
+  "quality_score": 0.22,
+  "parse_warnings": [
+    "Section not found: summary",
+    "Section not found: experience",
+    "Section not found: education",
+    "Section not found: languages"
+  ]
+}

@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+{% block title %}Upload & Run{% endblock %}
+{% block page_title %}Upload &amp; Run Pipeline{% endblock %}
+
+{% block content %}
+
+<!-- ── Status Banner ──────────────────────────────────────────── -->
+{% if running %}
+<div class="alert alert-info mb-16">
+  <span class="spinner" style="border-color:rgba(21,101,192,.4);
+    border-top-color:#1565c0; margin-right:8px;"></span>
+  Pipeline is currently running…
+</div>
+{% elif exit_code is not none %}
+  {% if exit_code == 0 %}
+  <div class="alert alert-success mb-16">
+    ✓ Pipeline completed successfully.
+    Last run: {{ last_run or '—' }}
+    — <a href="{{ url_for('rankings') }}">View Rankings</a>
+  </div>
+  {% else %}
+  <div class="alert alert-danger mb-16">
+    ✗ Pipeline exited with error code {{ exit_code }}.
+    Check the log below for details.
+  </div>
+  {% endif %}
+{% endif %}
+
+<!-- ── Main Grid ──────────────────────────────────────────────── -->
+<div class="grid-2 mb-16">
+
+  <!-- CV Upload -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Upload CVs</div>
+    </div>
+    <div class="card-body">
+      <div class="upload-zone" id="cv-drop-zone"
+           onclick="document.getElementById('cv-input').click()">
+        <div class="upload-icon">📂</div>
+        <div class="upload-label">Drag &amp; drop CV files here</div>
+        <div class="upload-hint">Supported: .pdf, .docx, .txt — multiple files OK</div>
+        <div id="cv-file-list" style="margin-top:12px; font-size:13px; color:#555;"></div>
+      </div>
+      <input type="file" id="cv-input" accept=".pdf,.docx,.txt"
+             multiple style="display:none">
+
+      <div style="margin-top:14px; display:flex; align-items:center;
+                  justify-content:space-between;">
+        <span class="text-sm text-muted">
+          Currently in raw_cvs/:
+          <strong id="cv-count">{{ cv_count }}</strong> file(s)
+        </span>
+        <button id="btn-upload-cvs"
+                class="topbar-btn btn-primary btn-sm"
+                onclick="uploadCVs()" disabled>
+          Upload Files
+        </button>
+      </div>
+      <div id="cv-upload-msg" class="text-sm" style="margin-top:6px;"></div>
+    </div>
+  </div>
+
+  <!-- JD Upload -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Job Description</div>
+    </div>
+    <div class="card-body">
+      <div style="margin-bottom:10px; display:flex; align-items:center;
+                  justify-content:space-between;">
+        <span class="text-sm text-muted">
+          {% if jd_exists %}
+          <span class="badge badge-success">JD loaded</span>
+          {% else %}
+          <span class="badge badge-warning">No JD</span>
+          {% endif %}
+          jd.txt
+        </span>
+        <label style="cursor:pointer;">
+          <span class="topbar-btn btn-secondary btn-sm">
+            📁 Upload .txt/.pdf
+          </span>
+          <input type="file" id="jd-file-input" accept=".txt,.pdf,.docx"
+                 style="display:none" onchange="uploadJDFile(this)">
+        </label>
+      </div>
+      <textarea id="jd-textarea"
+                placeholder="Paste job description here…"
+                style="width:100%; height:200px; border:1px solid #ddd;
+                       border-radius:6px; padding:12px; font-size:13px;
+                       resize:vertical; font-family:inherit; color:#333;
+                       line-height:1.6;">{{ jd_text }}</textarea>
+      <div style="margin-top:10px; text-align:right;">
+        <button class="topbar-btn btn-blue btn-sm"
+                onclick="saveJD()">
+          💾 Save JD
+        </button>
+      </div>
+      <div id="jd-save-msg" class="text-sm" style="margin-top:6px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Run Pipeline ───────────────────────────────────────────── -->
+<div class="card mb-16">
+  <div class="card-header">
+    <div class="card-title">Run Pipeline</div>
+  </div>
+  <div class="card-body">
+
+    <!-- Stage indicators -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;"
+         id="stage-indicators">
+      {% set stages = [
+        ('0', '🔐', 'Anonymize'),
+        ('0b','📝', 'Parse'),
+        ('1', '📊', 'Rank'),
+        ('2', '💬', 'Explain'),
+        ('3', '📋', 'Audit'),
+        ('4', '⚖', 'Bias'),
+      ] %}
+      {% for num, icon, label in stages %}
+      <div class="stage-indicator" data-stage="{{ num }}"
+           style="display:flex; align-items:center; gap:6px;
+                  padding:8px 14px; border-radius:20px; font-size:12px;
+                  font-weight:600; background:#f5f5f5; color:#888;
+                  border: 1px solid #e0e0e0; transition: all .3s;">
+        <span>{{ icon }}</span> Stage {{ num }} — {{ label }}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Run button -->
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button id="btn-run"
+              class="topbar-btn btn-primary"
+              style="padding:12px 28px; font-size:15px;"
+              onclick="runPipeline()"
+              {% if running %}disabled{% endif %}>
+        {% if running %}
+        <span class="spinner"></span>&nbsp; Running…
+        {% else %}
+        ▶ Run Full Pipeline
+        {% endif %}
+      </button>
+      <div class="text-muted text-sm">
+        Runs all stages: Anonymize → Parse → Rank → Explain → Audit → Bias
+      </div>
+    </div>
+
+    <!-- Overall progress bar -->
+    <div style="margin-top:16px; display:none;" id="progress-wrap">
+      <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+        <span class="text-sm fw-600" id="progress-label">Starting…</span>
+        <span class="text-sm text-muted" id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track" style="height:12px;">
+        <div class="progress-bar bar-final" id="progress-bar" style="width:0%">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Live Log Terminal ──────────────────────────────────────── -->
+<div class="card">
+  <div class="card-header">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="card-title">Live Pipeline Log</div>
+      <button class="topbar-btn btn-secondary btn-sm"
+              onclick="clearLog()">Clear</button>
+    </div>
+  </div>
+  <div class="card-body" style="padding:0;">
+    <div class="log-terminal" id="log-output">
+      <span style="color:#555;">— Log output will appear here when pipeline runs —</span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Upload & Run — full client-side JS
+══════════════════════════════════════════════════════════════ */
+
+/* ── State ────────────────────────────────────────────────────── */
+let selectedCVFiles = [];
+let pipelineRunning = {{ 'true' if running else 'false' }};
+
+/* ── CV drag-and-drop ─────────────────────────────────────────── */
+const dropZone = document.getElementById('cv-drop-zone');
+const cvInput  = document.getElementById('cv-input');
+
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('drag-over');
+});
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleCVFiles(e.dataTransfer.files);
+});
+cvInput.addEventListener('change', () => {
+  handleCVFiles(cvInput.files);
+});
+
+function handleCVFiles(files) {
+  selectedCVFiles = Array.from(files);
+  const listEl = document.getElementById('cv-file-list');
+  if (selectedCVFiles.length === 0) {
+    listEl.textContent = '';
+    document.getElementById('btn-upload-cvs').disabled = true;
+    return;
+  }
+  listEl.innerHTML = selectedCVFiles.map(f =>
+    `<div>📄 ${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`
+  ).join('');
+  document.getElementById('btn-upload-cvs').disabled = false;
+}
+
+async function uploadCVs() {
+  if (!selectedCVFiles.length) return;
+  const btn = document.getElementById('btn-upload-cvs');
+  const msg = document.getElementById('cv-upload-msg');
+  btn.disabled = true;
+  btn.textContent = 'Uploading…';
+  msg.textContent = '';
+
+  const fd = new FormData();
+  selectedCVFiles.forEach(f => fd.append('cvs', f));
+
+  try {
+    const res = await fetch('/api/upload-cvs', { method: 'POST', body: fd });
+    const data = await res.json();
+    msg.style.color = data.success ? '#2e7d32' : '#b71c1c';
+    msg.textContent = data.message;
+    if (data.success) {
+      document.getElementById('cv-count').textContent =
+        parseInt(document.getElementById('cv-count').textContent || '0') + data.count;
+      selectedCVFiles = [];
+      document.getElementById('cv-file-list').textContent = '';
+    }
+  } catch(e) {
+    msg.style.color = '#b71c1c';
+    msg.textContent = 'Upload failed: ' + e.message;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Upload Files';
+}
+
+/* ── JD save ──────────────────────────────────────────────────── */
+async function saveJD() {
+  const text = document.getElementById('jd-textarea').value.trim();
+  const msg  = document.getElementById('jd-save-msg');
+  if (!text) { msg.style.color='#b71c1c'; msg.textContent='JD is empty.'; return; }
+
+  try {
+    const res = await fetch('/api/upload-jd', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({text})
+    });
+    const data = await res.json();
+    msg.style.color = data.success ? '#2e7d32' : '#b71c1c';
+    msg.textContent = data.message;
+  } catch(e) {
+    msg.style.color = '#b71c1c';
+    msg.textContent = 'Save failed: ' + e.message;
+  }
+}
+
+async function uploadJDFile(input) {
+  if (!input.files.length) return;
+  const fd = new FormData();
+  fd.append('jd_file', input.files[0]);
+  const msg = document.getElementById('jd-save-msg');
+  try {
+    const res = await fetch('/api/upload-jd', { method:'POST', body:fd });
+    const data = await res.json();
+    msg.style.color = data.success ? '#2e7d32' : '#b71c1c';
+    msg.textContent = data.message;
+    if (data.success) location.reload();
+  } catch(e) {
+    msg.style.color = '#b71c1c';
+    msg.textContent = 'Upload failed: ' + e.message;
+  }
+}
+
+/* ── Pipeline run ─────────────────────────────────────────────── */
+const STAGE_KEYWORDS = {
+  '0':  ['STAGE 0 ', 'module0', 'Anonymiz'],
+  '0b': ['STAGE 0b', 'module0b', 'Parsing', 'Parser'],
+  '1':  ['STAGE 1 ', 'module1', 'Ranking', 'SBERT'],
+  '2':  ['STAGE 2 ', 'module2', 'Explain'],
+  '3':  ['STAGE 3 ', 'module3', 'Audit'],
+  '4':  ['STAGE 4 ', 'module4', 'Bias'],
+};
+const stageOrder = ['0','0b','1','2','3','4'];
+let currentStageIdx = -1;
+
+function updateStageIndicator(line) {
+  for (let i = 0; i < stageOrder.length; i++) {
+    const s   = stageOrder[i];
+    const kws = STAGE_KEYWORDS[s];
+    if (kws.some(kw => line.includes(kw))) {
+      if (i > currentStageIdx) {
+        currentStageIdx = i;
+        // Mark previous stages done
+        stageOrder.slice(0, i).forEach(prev => {
+          const el = document.querySelector(`[data-stage="${prev}"]`);
+          if (el) {
+            el.style.background = '#e8f5e9';
+            el.style.color      = '#2e7d32';
+            el.style.borderColor= '#c8e6c9';
+          }
+        });
+        // Mark current stage active
+        const el = document.querySelector(`[data-stage="${s}"]`);
+        if (el) {
+          el.style.background = '#e3f2fd';
+          el.style.color      = '#1565c0';
+          el.style.borderColor= '#bbdefb';
+        }
+        // Update progress
+        const pct = Math.round((i / (stageOrder.length - 1)) * 100);
+        setProgress(pct, `Stage ${s} running…`);
+      }
+      break;
+    }
+  }
+  if (line.includes('PIPELINE COMPLETE') || line.includes('PIPELINE COMPLETED')) {
+    stageOrder.forEach(s => {
+      const el = document.querySelector(`[data-stage="${s}"]`);
+      if (el) {
+        el.style.background = '#e8f5e9';
+        el.style.color      = '#2e7d32';
+        el.style.borderColor= '#c8e6c9';
+      }
+    });
+    setProgress(100, 'Pipeline complete!');
+  }
+  if (line.includes('PIPELINE FAILED') || (line.includes('FAILED') && line.includes('exit'))) {
+    setProgress(null, 'Pipeline failed', true);
+  }
+}
+
+function setProgress(pct, label, error=false) {
+  const wrap = document.getElementById('progress-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('progress-label').textContent = label;
+  if (pct !== null) {
+    document.getElementById('progress-pct').textContent  = pct + '%';
+    const bar = document.getElementById('progress-bar');
+    bar.style.width = pct + '%';
+    bar.style.background = error
+      ? 'linear-gradient(90deg,#f44336,#ef5350)'
+      : 'linear-gradient(90deg,#4CAF50,#66BB6A)';
+  }
+}
+
+function appendLog(text, cls='') {
+  const log = document.getElementById('log-output');
+  const line = document.createElement('div');
+  line.className = 'log-line-' + (cls || 'default');
+  line.textContent = text;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+function lineClass(text) {
+  if (text.includes('[OK]') || text.includes('✓') ||
+      text.includes('COMPLETE') || text.includes('Done:')) return 'ok';
+  if (text.includes('[ERROR]') || text.includes('[FAILED]') ||
+      text.includes('Error') || text.includes('FAILED')) return 'err';
+  if (text.includes('STAGE') || text.includes('MODULE')) return 'stage';
+  return 'default';
+}
+
+function clearLog() {
+  document.getElementById('log-output').innerHTML =
+    '<span style="color:#555;">— Log cleared —</span>';
+  currentStageIdx = -1;
+}
+
+function setRunning(running) {
+  pipelineRunning = running;
+  const btn = document.getElementById('btn-run');
+  if (running) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>&nbsp; Running…';
+    document.getElementById('progress-wrap').style.display = 'block';
+    setProgress(0, 'Initialising…');
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = '▶ Run Full Pipeline';
+  }
+}
+
+function runPipeline() {
+  if (pipelineRunning) return;
+
+  const log = document.getElementById('log-output');
+  log.innerHTML = '';
+  currentStageIdx = -1;
+  setRunning(true);
+
+  // Reset stage indicators
+  stageOrder.forEach(s => {
+    const el = document.querySelector(`[data-stage="${s}"]`);
+    if (el) {
+      el.style.background  = '#f5f5f5';
+      el.style.color       = '#888';
+      el.style.borderColor = '#e0e0e0';
+    }
+  });
+
+  fetch('/api/run-pipeline', { method: 'POST' })
+    .then(res => {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) { setRunning(false); return; }
+          const text = decoder.decode(value, { stream: true });
+          // SSE lines are "data: <content>\n\n"
+          text.split('\n').forEach(rawLine => {
+            if (!rawLine.startsWith('data:')) return;
+            const line = rawLine.slice(5).trim();
+            if (!line) return;
+            if (line === '__DONE__') { setRunning(false); return; }
+            appendLog(line, lineClass(line));
+            updateStageIndicator(line);
+          });
+          read();
+        }).catch(err => {
+          appendLog('[Connection error: ' + err.message + ']', 'err');
+          setRunning(false);
+        });
+      }
+      read();
+    })
+    .catch(err => {
+      appendLog('[Failed to start pipeline: ' + err.message + ']', 'err');
+      setRunning(false);
+    });
+}
+
+/* Auto-start polling if pipeline was already running on page load */
+{% if running %}
+window.addEventListener('load', function() {
+  setRunning(true);
+  appendLog('[Pipeline already in progress — reconnecting…]', 'stage');
+  const poll = setInterval(async () => {
+    const res  = await fetch('/api/run-status');
+    const data = await res.json();
+    if (!data.running) {
+      clearInterval(poll);
+      setRunning(false);
+      if (data.exit_code === 0) {
+        setProgress(100, 'Pipeline complete!');
+        appendLog('[PIPELINE COMPLETED SUCCESSFULLY]', 'ok');
+      } else if (data.exit_code !== null) {
+        appendLog('[PIPELINE FAILED — exit code ' + data.exit_code + ']', 'err');
+      }
+    }
+  }, 3000);
+});
+{% endif %}
+</script>
+{% endblock %}

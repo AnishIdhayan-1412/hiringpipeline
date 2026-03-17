@@ -1,0 +1,74 @@
+{
+  "candidate_id": "Candidate_04",
+  "rank": 7,
+  "final_score": 0.2375,
+  "verdict": "Weak Match",
+  "headline": "Ranked #7 of 7 — weak match, skills are largely misaligned with requirements",
+  "explanation": {
+    "score_breakdown": {
+      "semantic_score": {
+        "value": 0.4056,
+        "label": "Fair",
+        "note": "CV content partially overlaps with the job description"
+      },
+      "keyword_score": {
+        "value": 0.0,
+        "label": "Poor",
+        "note": "Matched 0 of 14 required skills"
+      },
+      "quality_score": {
+        "value": 0.34,
+        "label": "Poor",
+        "note": "CV may be incomplete or poorly formatted"
+      },
+      "final_score": {
+        "value": 0.2375,
+        "label": "Weak Match"
+      }
+    },
+    "skills": {
+      "matched": [],
+      "missing": [
+        "AWS",
+        "Adaptability",
+        "Azure",
+        "Collaboration",
+        "Communication",
+        "GCP",
+        "Machine Learning",
+        "NLP",
+        "Pandas",
+        "Power BI",
+        "Python",
+        "SQL",
+        "Scikit-learn",
+        "Tableau"
+      ],
+      "match_rate": "0%",
+      "summary": "Candidate has 0 of 14 required skills. Missing: AWS, Adaptability, Azure, and 11 more."
+    },
+    "experience": {
+      "total_months": 0,
+      "total_years": "0",
+      "summary": "No experience entries could be extracted from this CV."
+    },
+    "education": {
+      "highest_level": null,
+      "field": "Education",
+      "summary": "Degree in Education (level not recorded)"
+    },
+    "strengths": [],
+    "gaps": [
+      "Missing AWS — listed as required in JD",
+      "Missing Adaptability — listed as required in JD",
+      "Missing Azure — listed as required in JD",
+      "Missing Collaboration — listed as required in JD",
+      "Missing Communication — listed as required in JD",
+      "...and 9 more skills not found in CV",
+      "Limited professional experience (under 1 year)",
+      "CV may be incomplete or poorly structured"
+    ],
+    "recommendation": "Not recommended at this stage. Significant skill gaps: AWS, Adaptability, Azure."
+  },
+  "generated_at": "2026-03-17T10:03:00"
+}

@@ -1,0 +1,74 @@
+{
+  "candidate_id": "Candidate_05",
+  "rank": 3,
+  "final_score": 0.3537,
+  "verdict": "Weak Match",
+  "headline": "Ranked #3 of 7 — weak match, skills are largely misaligned with requirements",
+  "explanation": {
+    "score_breakdown": {
+      "semantic_score": {
+        "value": 0.5001,
+        "label": "Fair",
+        "note": "CV content partially overlaps with the job description"
+      },
+      "keyword_score": {
+        "value": 0.1429,
+        "label": "Poor",
+        "note": "Matched 2 of 14 required skills"
+      },
+      "quality_score": {
+        "value": 0.62,
+        "label": "Good",
+        "note": "CV is reasonably structured with most sections present"
+      },
+      "final_score": {
+        "value": 0.3537,
+        "label": "Weak Match"
+      }
+    },
+    "skills": {
+      "matched": [
+        "Pandas",
+        "Python"
+      ],
+      "missing": [
+        "AWS",
+        "Adaptability",
+        "Azure",
+        "Collaboration",
+        "Communication",
+        "GCP",
+        "Machine Learning",
+        "NLP",
+        "Power BI",
+        "SQL",
+        "Scikit-learn",
+        "Tableau"
+      ],
+      "match_rate": "14%",
+      "summary": "Candidate has 2 of 14 required skills. Missing: AWS, Adaptability, Azure, and 9 more."
+    },
+    "experience": {
+      "total_months": 0,
+      "total_years": "0",
+      "summary": "No experience entries could be extracted from this CV."
+    },
+    "education": {
+      "highest_level": null,
+      "field": "Computer Science",
+      "summary": "Degree in Computer Science (level not recorded)"
+    },
+    "strengths": [],
+    "gaps": [
+      "Missing AWS — listed as required in JD",
+      "Missing Adaptability — listed as required in JD",
+      "Missing Azure — listed as required in JD",
+      "Missing Collaboration — listed as required in JD",
+      "Missing Communication — listed as required in JD",
+      "...and 7 more skills not found in CV",
+      "Limited professional experience (under 1 year)"
+    ],
+    "recommendation": "Not recommended at this stage. Significant skill gaps: AWS, Adaptability, Azure."
+  },
+  "generated_at": "2026-03-17T10:03:00"
+}

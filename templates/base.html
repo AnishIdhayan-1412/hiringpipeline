@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Bias-Free Hiring{% endblock %} — Pipeline Dashboard</title>
+  <style>
+    /* ── Reset & Base ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont,
+      'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px; color: #1a1a2e; background: #f0f2f5; }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .layout    { display: flex; min-height: 100vh; }
+    .sidebar   { width: 240px; min-height: 100vh; background: #1a1a2e;
+                 display: flex; flex-direction: column; position: fixed;
+                 top: 0; left: 0; z-index: 100; }
+    .main      { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .topbar    { background: #fff; border-bottom: 1px solid #e8eaed;
+                 padding: 0 32px; height: 56px; display: flex;
+                 align-items: center; justify-content: space-between;
+                 position: sticky; top: 0; z-index: 99;
+                 box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .content   { padding: 28px 32px; flex: 1; }
+
+    /* ── Sidebar Brand ──────────────────────────────────────── */
+    .sidebar-brand { padding: 22px 20px 18px;
+                     border-bottom: 1px solid rgba(255,255,255,.08); }
+    .sidebar-brand .brand-title {
+      color: #fff; font-size: 16px; font-weight: 700;
+      letter-spacing: .3px; line-height: 1.3; }
+    .sidebar-brand .brand-sub {
+      color: rgba(255,255,255,.45); font-size: 11px;
+      margin-top: 3px; text-transform: uppercase; letter-spacing: .8px; }
+
+    /* ── Sidebar Nav ────────────────────────────────────────── */
+    .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+    .nav-section { padding: 14px 20px 4px;
+                   color: rgba(255,255,255,.35); font-size: 10px;
+                   text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .nav-item    { display: flex; align-items: center; gap: 11px;
+                   padding: 10px 20px; color: rgba(255,255,255,.7);
+                   text-decoration: none; font-size: 13.5px;
+                   transition: background .15s, color .15s; cursor: pointer; }
+    .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,.12); color: #fff;
+                       border-right: 3px solid #4CAF50; }
+    .nav-icon  { width: 18px; text-align: center; font-size: 15px; opacity: .85; }
+
+    /* ── Sidebar Status Footer ──────────────────────────────── */
+    .sidebar-status { padding: 14px 20px 18px;
+                      border-top: 1px solid rgba(255,255,255,.08); }
+    .sidebar-status .status-title {
+      color: rgba(255,255,255,.4); font-size: 10px;
+      text-transform: uppercase; letter-spacing: .8px;
+      margin-bottom: 10px; font-weight: 600; }
+    .stage-dot { display: flex; align-items: center; gap: 8px;
+                 margin-bottom: 6px; }
+    .dot       { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot.done  { background: #4CAF50; }
+    .dot.pending { background: rgba(255,255,255,.2); }
+    .stage-name { color: rgba(255,255,255,.6); font-size: 11.5px; }
+
+    /* ── Topbar ─────────────────────────────────────────────── */
+    .topbar-title { font-size: 15px; font-weight: 600; color: #1a1a2e; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-time  { color: #888; font-size: 12px; }
+    .topbar-btn   { padding: 7px 16px; border-radius: 6px; font-size: 13px;
+                    font-weight: 500; cursor: pointer; border: none;
+                    text-decoration: none; display: inline-flex; align-items: center;
+                    gap: 6px; transition: opacity .15s; }
+    .topbar-btn:hover { opacity: .88; }
+    .btn-primary  { background: #4CAF50; color: #fff; }
+    .btn-secondary{ background: #f0f2f5; color: #444; border: 1px solid #ddd; }
+    .btn-blue     { background: #2196F3; color: #fff; }
+    .btn-danger   { background: #f44336; color: #fff; }
+    .btn-amber    { background: #FF9800; color: #fff; }
+    .btn-sm       { padding: 5px 12px; font-size: 12px; }
+
+    /* ── Cards ───────────────────────────────────────────────── */
+    .card { background: #fff; border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 0 0 1px rgba(0,0,0,.04);
+            overflow: hidden; }
+    .card-header { padding: 16px 20px 0; }
+    .card-title  { font-size: 13px; font-weight: 600; color: #444;
+                   text-transform: uppercase; letter-spacing: .5px; }
+    .card-body   { padding: 16px 20px; }
+    .card-footer { padding: 12px 20px; border-top: 1px solid #f0f2f5;
+                   background: #fafafa; }
+
+    /* ── Stat Cards ──────────────────────────────────────────── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr);
+                 gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border-radius: 8px; padding: 20px;
+                 box-shadow: 0 1px 4px rgba(0,0,0,.06);
+                 display: flex; align-items: center; gap: 16px; }
+    .stat-icon { width: 44px; height: 44px; border-radius: 10px;
+                 display: flex; align-items: center; justify-content: center;
+                 font-size: 20px; flex-shrink: 0; }
+    .stat-icon.green  { background: #e8f5e9; }
+    .stat-icon.blue   { background: #e3f2fd; }
+    .stat-icon.amber  { background: #fff3e0; }
+    .stat-icon.purple { background: #f3e5f5; }
+    .stat-value { font-size: 26px; font-weight: 700; color: #1a1a2e;
+                  line-height: 1; }
+    .stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+
+    /* ── Badge / Verdict Pills ───────────────────────────────── */
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px;
+             border-radius: 20px; font-size: 12px; font-weight: 600;
+             white-space: nowrap; }
+    .badge-strong  { background: #e8f5e9; color: #2e7d32; }
+    .badge-good    { background: #e3f2fd; color: #1565c0; }
+    .badge-partial { background: #fff3e0; color: #e65100; }
+    .badge-weak    { background: #ffebee; color: #b71c1c; }
+    .badge-success { background: #e8f5e9; color: #2e7d32; }
+    .badge-danger  { background: #ffebee; color: #b71c1c; }
+    .badge-info    { background: #e3f2fd; color: #1565c0; }
+    .badge-warning { background: #fff3e0; color: #e65100; }
+    .badge-grey    { background: #f5f5f5; color: #666; }
+
+    /* ── Tables ──────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table  { width: 100%; border-collapse: collapse; }
+    th     { padding: 10px 14px; text-align: left; font-size: 11.5px;
+             font-weight: 600; color: #666; text-transform: uppercase;
+             letter-spacing: .5px; border-bottom: 2px solid #f0f2f5;
+             white-space: nowrap; background: #fafafa; }
+    td     { padding: 12px 14px; border-bottom: 1px solid #f5f5f5;
+             vertical-align: middle; }
+    tr:hover td { background: #f8f9ff; }
+    tr:last-child td { border-bottom: none; }
+    .td-rank { font-weight: 700; color: #1a1a2e; font-size: 15px;
+               width: 48px; text-align: center; }
+    .td-candidate { font-weight: 600; color: #1a1a2e; }
+    .td-score     { font-weight: 700; font-size: 15px; }
+
+    /* ── Progress Bars ───────────────────────────────────────── */
+    .progress-wrap { margin-bottom: 14px; }
+    .progress-header { display: flex; justify-content: space-between;
+                       margin-bottom: 5px; }
+    .progress-label { font-size: 13px; font-weight: 500; color: #444; }
+    .progress-value { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+    .progress-track { height: 10px; background: #f0f2f5; border-radius: 5px;
+                      overflow: hidden; }
+    .progress-bar   { height: 100%; border-radius: 5px;
+                      transition: width .6s ease; }
+    .bar-final    { background: linear-gradient(90deg, #4CAF50, #66BB6A); }
+    .bar-semantic { background: linear-gradient(90deg, #2196F3, #42A5F5); }
+    .bar-keyword  { background: linear-gradient(90deg, #9C27B0, #AB47BC); }
+    .bar-quality  { background: linear-gradient(90deg, #FF9800, #FFB74D); }
+
+    /* ── Skill Pills ──────────────────────────────────────────── */
+    .skill-pill { display: inline-flex; align-items: center; padding: 4px 10px;
+                  border-radius: 20px; font-size: 12px; font-weight: 500;
+                  margin: 3px; white-space: nowrap; }
+    .pill-green { background: #e8f5e9; color: #2e7d32;
+                  border: 1px solid #c8e6c9; }
+    .pill-red   { background: #ffebee; color: #b71c1c;
+                  border: 1px solid #ffcdd2; }
+
+    /* ── Status Indicators ────────────────────────────────────── */
+    .status-row { display: flex; align-items: center; gap: 10px;
+                  padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+    .status-row:last-child { border-bottom: none; }
+    .status-icon { font-size: 18px; width: 26px; text-align: center; }
+    .status-label{ flex: 1; font-size: 13.5px; font-weight: 500; }
+    .status-badge{ font-size: 11px; padding: 2px 8px; border-radius: 10px;
+                   font-weight: 600; }
+
+    /* ── Alert / Info boxes ──────────────────────────────────── */
+    .alert { padding: 14px 18px; border-radius: 8px; font-size: 13.5px;
+             line-height: 1.6; margin-bottom: 16px; }
+    .alert-info    { background: #e3f2fd; color: #1565c0;
+                     border-left: 4px solid #2196F3; }
+    .alert-success { background: #e8f5e9; color: #2e7d32;
+                     border-left: 4px solid #4CAF50; }
+    .alert-warning { background: #fff3e0; color: #e65100;
+                     border-left: 4px solid #FF9800; }
+    .alert-danger  { background: #ffebee; color: #b71c1c;
+                     border-left: 4px solid #f44336; }
+
+    /* ── GDPR Checklist ───────────────────────────────────────── */
+    .checklist-item { display: flex; align-items: flex-start; gap: 14px;
+                      padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+    .checklist-item:last-child { border-bottom: none; }
+    .check-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .check-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .check-evidence { font-size: 12.5px; color: #666; line-height: 1.5; }
+
+    /* ── Section headings ─────────────────────────────────────── */
+    .section-title { font-size: 18px; font-weight: 700; color: #1a1a2e;
+                     margin-bottom: 6px; }
+    .section-sub   { font-size: 13px; color: #888; margin-bottom: 20px; }
+
+    /* ── Grid utilities ──────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .mb-4   { margin-bottom: 4px; }
+    .mb-8   { margin-bottom: 8px; }
+    .mb-16  { margin-bottom: 16px; }
+    .mb-24  { margin-bottom: 24px; }
+    .mt-16  { margin-top: 16px; }
+    .mt-24  { margin-top: 24px; }
+    .flex   { display: flex; }
+    .flex-between { display: flex; justify-content: space-between;
+                    align-items: center; }
+    .gap-8  { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .fw-600 { font-weight: 600; }
+    .text-muted { color: #888; }
+    .text-sm    { font-size: 12px; }
+
+    /* ── Upload zone ─────────────────────────────────────────── */
+    .upload-zone { border: 2px dashed #ddd; border-radius: 10px;
+                   padding: 40px 20px; text-align: center;
+                   cursor: pointer; transition: border-color .2s, background .2s;
+                   background: #fafafa; }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: #4CAF50; background: #f0faf0; }
+    .upload-icon  { font-size: 40px; margin-bottom: 12px; color: #bbb; }
+    .upload-label { font-size: 15px; font-weight: 500; color: #444;
+                    margin-bottom: 6px; }
+    .upload-hint  { font-size: 12px; color: #999; }
+
+    /* ── Log terminal ────────────────────────────────────────── */
+    .log-terminal { background: #0d1117; color: #c9d1d9; border-radius: 8px;
+                    padding: 16px 18px; font-family: 'Courier New', monospace;
+                    font-size: 12.5px; min-height: 200px; max-height: 420px;
+                    overflow-y: auto; line-height: 1.65; }
+    .log-line-ok      { color: #56d364; }
+    .log-line-err     { color: #f85149; }
+    .log-line-stage   { color: #79c0ff; font-weight: 600; }
+    .log-line-default { color: #c9d1d9; }
+
+    /* ── Scrollbar ───────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 3px; }
+
+    /* ── Recommendation box ──────────────────────────────────── */
+    .rec-box { background: linear-gradient(135deg, #f0faf0, #e8f5e9);
+               border: 1px solid #c8e6c9; border-radius: 8px;
+               padding: 16px 20px; line-height: 1.7; font-size: 14px;
+               color: #1b5e20; }
+    .rec-box.warning { background: linear-gradient(135deg, #fff8f0, #fff3e0);
+                       border-color: #ffe0b2; color: #bf360c; }
+    .rec-box.danger  { background: linear-gradient(135deg, #fff5f5, #ffebee);
+                       border-color: #ffcdd2; color: #b71c1c; }
+    .rec-box.info    { background: linear-gradient(135deg, #f0f8ff, #e3f2fd);
+                       border-color: #bbdefb; color: #0d47a1; }
+
+    /* ── Strength / Gap bullets ──────────────────────────────── */
+    .bullet-list { list-style: none; }
+    .bullet-list li { display: flex; align-items: flex-start; gap: 8px;
+                      padding: 5px 0; font-size: 13.5px; line-height: 1.5; }
+    .bullet-list .bicon { flex-shrink: 0; margin-top: 1px; font-size: 14px; }
+    .bullet-green .bicon { color: #4CAF50; }
+    .bullet-amber .bicon { color: #FF9800; }
+    .bullet-red   .bicon { color: #f44336; }
+
+    /* ── SHA hash display ────────────────────────────────────── */
+    .hash-display { font-family: 'Courier New', monospace; font-size: 12px;
+                    background: #f5f5f5; padding: 10px 14px; border-radius: 6px;
+                    word-break: break-all; color: #444;
+                    border: 1px solid #e0e0e0; }
+
+    /* ── Candidate nav arrows ─────────────────────────────────── */
+    .cand-nav { display: flex; gap: 8px; }
+    .cand-nav a { padding: 7px 14px; border-radius: 6px;
+                  background: #f0f2f5; color: #444; text-decoration: none;
+                  font-size: 13px; border: 1px solid #ddd; font-weight: 500; }
+    .cand-nav a:hover { background: #e8eaed; }
+
+    /* ── Spinner ─────────────────────────────────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; width: 16px; height: 16px;
+               border: 2px solid rgba(255,255,255,.4);
+               border-top-color: #fff; border-radius: 50%;
+               animation: spin .7s linear infinite; }
+
+    /* ── Score color coding ──────────────────────────────────── */
+    .score-strong  { color: #2e7d32; }
+    .score-good    { color: #1565c0; }
+    .score-partial { color: #e65100; }
+    .score-weak    { color: #b71c1c; }
+
+    /* ── Dropdown filter ─────────────────────────────────────── */
+    .filter-select { padding: 7px 12px; border-radius: 6px;
+                     border: 1px solid #ddd; font-size: 13px;
+                     background: #fff; cursor: pointer; color: #333;
+                     appearance: auto; }
+    .filter-select:focus { outline: 2px solid #4CAF50; outline-offset: 1px; }
+
+    /* ── Retention table ──────────────────────────────────────── */
+    .retention-table td, .retention-table th {
+      padding: 10px 16px; }
+
+    /* ── Stage pipeline visual ───────────────────────────────── */
+    .pipeline-stages { display: flex; gap: 0; margin-bottom: 24px;
+                       background: #fff; border-radius: 8px;
+                       box-shadow: 0 1px 4px rgba(0,0,0,.06);
+                       overflow: hidden; }
+    .pipeline-stage  { flex: 1; padding: 16px 12px; text-align: center;
+                       border-right: 1px solid #f0f2f5; position: relative; }
+    .pipeline-stage:last-child { border-right: none; }
+    .pipeline-stage.done { background: #f0faf0; }
+    .pipeline-stage.pending { background: #fafafa; }
+    .ps-icon  { font-size: 22px; margin-bottom: 6px; }
+    .ps-label { font-size: 11px; font-weight: 600; color: #444;
+                text-transform: uppercase; letter-spacing: .4px; }
+    .ps-state { font-size: 11px; margin-top: 3px; }
+    .ps-state.done    { color: #4CAF50; }
+    .ps-state.pending { color: #bbb; }
+
+    @media (max-width: 1280px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-2    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-title">⚖ Bias-Free Hiring</div>
+      <div class="brand-sub">Pipeline Dashboard</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Navigation</div>
+      <a href="{{ url_for('dashboard') }}"
+         class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="{{ url_for('rankings') }}"
+         class="nav-item {% if request.endpoint == 'rankings' %}active{% endif %}">
+        <span class="nav-icon">🏆</span> Rankings
+      </a>
+      <a href="{{ url_for('audit') }}"
+         class="nav-item {% if request.endpoint == 'audit' %}active{% endif %}">
+        <span class="nav-icon">🔒</span> Audit &amp; Compliance
+      </a>
+      <a href="{{ url_for('upload') }}"
+         class="nav-item {% if request.endpoint == 'upload' %}active{% endif %}">
+        <span class="nav-icon">📤</span> Upload &amp; Run
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Quick Actions</div>
+      <a href="/api/download/ranking-csv" class="nav-item">
+        <span class="nav-icon">⬇</span> Export CSV
+      </a>
+      <a href="/api/download/audit-report" class="nav-item">
+        <span class="nav-icon">📄</span> Audit Report
+      </a>
+    </nav>
+
+    <!-- Stage status mini-panel -->
+    <div class="sidebar-status">
+      <div class="status-title">Stage Status</div>
+      {% for key, info in pipeline_status.items() %}
+      <div class="stage-dot">
+        <div class="dot {% if info.done %}done{% else %}pending{% endif %}"></div>
+        <span class="stage-name">{{ info.label }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+      <div class="topbar-right">
+        <span class="topbar-time">{{ now }}</span>
+        <a href="{{ url_for('upload') }}" class="topbar-btn btn-primary">
+          ▶ Run Pipeline
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+</div>
+
+<script>
+/* ── Shared JS utilities ── */
+function verdictClass(verdict) {
+  const map = {
+    'Strong Match': 'strong', 'Good Match': 'good',
+    'Partial Match': 'partial', 'Weak Match': 'weak'
+  };
+  return map[verdict] || 'grey';
+}
+
+function scoreClass(score) {
+  if (score >= 0.75) return 'score-strong';
+  if (score >= 0.55) return 'score-good';
+  if (score >= 0.40) return 'score-partial';
+  return 'score-weak';
+}
+
+function formatPct(v) {
+  return (Math.round(v * 1000) / 10).toFixed(1) + '%';
+}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
