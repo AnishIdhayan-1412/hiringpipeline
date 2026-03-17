@@ -1,25 +1,22 @@
 __pycache__/
 *.pyc
 *.pyo
-.pytest_cache/
-project01/
-*.env
-raw_cvs/
-vault/
-__pycache__/
-*.pyc
-*.pyo
 *.pyd
 .pytest_cache/
-.env
+*.env
 venv/
+*.egg-info/
 project01/
 resumes/
-*.egg-info/
-argparse.ArgumentParser
+
+# pipeline-generated artefacts
+raw_cvs/
 anonymized_cvs/
 parsed/
 vault/
 explanations/
 audit/
 ranking_report.txt
+
+# stray file created by accident (see README Troubleshooting)
+argparse.ArgumentParser
