@@ -1,9 +1,0 @@
-Rank | Candidate              | Match Score
-----------------------------------------------
-1    | Candidate_06           | 0.6634
-2    | Candidate_07           | 0.3551
-3    | Candidate_05           | 0.3537
-4    | Candidate_01           | 0.3364
-5    | Candidate_02           | 0.2787
-6    | Candidate_03           | 0.2588
-7    | Candidate_04           | 0.2375
