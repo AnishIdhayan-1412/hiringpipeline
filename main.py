@@ -31,6 +31,8 @@ import module1
 import module2
 import module3
 import module4
+from exceptions import ConfigurationError
+from pipeline_logging import configure_logging
 
 # ──────────────────────────────────────────────────────────────────────────
 # Default paths
@@ -46,12 +48,8 @@ AUDIT_DIR         = os.path.join(BASE_DIR, 'audit')
 
 
 def _configure_logging(verbose: bool = False) -> None:
-    """Configure root logging for the entire pipeline."""
-    logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-        datefmt='%H:%M:%S',
-    )
+    """Configure root logging for the entire pipeline via centralised module."""
+    configure_logging(verbose=verbose, log_dir="logs")
 
 
 def _run_stage(stage_num, label, fn, *args, skip_stages, **kwargs) -> bool:

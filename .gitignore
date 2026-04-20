@@ -1,22 +1,72 @@
+# ── Python ────────────────────────────────────────────────────────────────
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.pytest_cache/
-*.env
-venv/
+*.py[cod]
+*$py.class
+*.so
+*.egg
 *.egg-info/
-project01/
-resumes/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
 
-# pipeline-generated artefacts
+# ── Virtual environments ───────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Pytest / coverage ─────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ── Environment variables & secrets ───────────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+
+# ── macOS / Linux / Windows artifacts ─────────────────────────────────────
+.DS_Store
+.DS_Store?
+Thumbs.db
+desktop.ini
+
+# ── IDE configs ───────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ── Pipeline-generated data directories ───────────────────────────────────
 raw_cvs/
 anonymized_cvs/
 parsed/
 vault/
 explanations/
 audit/
+project01/
+resumes/
+
+# ── Pipeline log files ────────────────────────────────────────────────────
+logs/
 ranking_report.txt
 
-# stray file created by accident (see README Troubleshooting)
+# ── SQLite databases (Sprint 1) ───────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Pre-downloaded ML models cache ────────────────────────────────────────
+models/
+.cache/
+sentence_transformers_cache/
+spacy_models/
+
+# ── Docker build artifacts ────────────────────────────────────────────────
+*.tar
+
+# ── Stray file created by accident (see README Troubleshooting) ───────────
 argparse.ArgumentParser
