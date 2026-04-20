@@ -1,0 +1,44 @@
+# ── Python artifacts ──────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Pipeline data (mounted as volumes at runtime) ─────────────
+raw_cvs/
+anonymized_cvs/
+parsed/
+vault/
+explanations/
+audit/
+logs/
+data/
+
+# ── Local databases ───────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Development / IDE files ───────────────────────────────────
+.env
+.env.*
+.idea/
+.vscode/
+*.sublime-project
+
+# ── OS artifacts ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Git ───────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── CI / deployment artifacts ─────────────────────────────────
+.github/
+*.tar

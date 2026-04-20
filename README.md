@@ -213,3 +213,56 @@ Delete it with `rm "argparse.ArgumentParser"` (Linux/macOS) or `del "argparse.Ar
 ## License
 
 MIT © 2024 Anish Idhayan
+
+---
+
+## Docker
+
+### Build & run with Docker Compose (recommended)
+
+```bash
+# Build image (pre-downloads ~520 MB of ML models into the image)
+docker compose build
+
+# Start the dashboard on http://localhost:5000
+docker compose up -d
+
+# Tail live logs
+docker compose logs -f pipeline
+
+# Stop
+docker compose down
+```
+
+### Build & run with plain Docker
+
+```bash
+# Build
+docker build -t hiring-pipeline .
+
+# Run dashboard
+docker run -p 5000:5000 \
+  -v $(pwd)/raw_cvs:/app/raw_cvs \
+  hiring-pipeline
+
+# Run pipeline directly (no dashboard)
+docker run --rm \
+  -v $(pwd)/raw_cvs:/app/raw_cvs \
+  -v $(pwd)/data:/app/data \
+  hiring-pipeline \
+  python main.py --jd-file jd.txt
+```
+
+### Fast CI builds (skip large models)
+
+```bash
+# Uses en_core_web_sm instead of en_core_web_trf — saves ~400 MB
+docker build --build-arg SKIP_LARGE_MODELS=1 -t hiring-pipeline .
+```
+
+### Health check
+
+```bash
+curl http://localhost:5000/health
+# {"status":"ok","service":"bias-free-hiring-pipeline","version":"1.0.0",...}
+```
