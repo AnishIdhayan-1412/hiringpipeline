@@ -1242,9 +1242,6 @@ def _configure_logging(verbose: bool = False) -> None:
     """Configure logging for standalone execution via the centralised module."""
     from pipeline_logging import configure_logging
     configure_logging(verbose=verbose)
-s [%(levelname)s] %(name)s: %(message)s',
-        datefmt='%H:%M:%S',
-    )
 
 
 if __name__ == '__main__':
