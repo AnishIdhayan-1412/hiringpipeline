@@ -1208,16 +1208,10 @@ def run(input_dir: str, output_dir: str) -> bool:
 # ═══════════════════════════════════════════════════════════════════════════
 
 def _configure_logging(verbose: bool = False) -> None:
-    """Configure root logger for standalone execution.
+    """Configure logging for standalone execution via the centralised module."""
+    from pipeline_logging import configure_logging
+    configure_logging(verbose=verbose)
 
-    Args:
-        verbose: If True, sets level to DEBUG; otherwise INFO.
-    """
-    logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format=_LOG_FORMAT,
-        datefmt=_DATE_FMT,
-    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════

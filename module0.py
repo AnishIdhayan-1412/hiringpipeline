@@ -1239,11 +1239,10 @@ def run(
 # ═════════════════════════════════════════════
 
 def _configure_logging(verbose: bool = False) -> None:
-    """Configure logging for standalone execution."""
-    level = logging.DEBUG if verbose else logging.INFO
-    logging.basicConfig(
-        level=level,
-        format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    """Configure logging for standalone execution via the centralised module."""
+    from pipeline_logging import configure_logging
+    configure_logging(verbose=verbose)
+s [%(levelname)s] %(name)s: %(message)s',
         datefmt='%H:%M:%S',
     )
 

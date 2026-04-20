@@ -824,12 +824,10 @@ def _build_arg_parser() -> argparse.ArgumentParser:
 
 
 def _configure_logging(verbose: bool = False) -> None:
-    """Configure root logger for standalone execution."""
-    logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format=_LOG_FORMAT,
-        datefmt=_DATE_FMT,
-    )
+    """Configure logging for standalone execution via the centralised module."""
+    from pipeline_logging import configure_logging
+    configure_logging(verbose=verbose)
+
 
 
 if __name__ == "__main__":

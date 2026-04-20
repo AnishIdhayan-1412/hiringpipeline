@@ -1,11 +1,41 @@
-spacy>=3.5
-spacy-transformers>=1.3
+# ── Bias-Free Hiring Pipeline — Python Dependencies ──────────────────────
+# Pin major versions for reproducibility; minor/patch updates are allowed.
+#
+# Install:
+#   pip install -r requirements.txt
+#   python -m spacy download en_core_web_trf
+#
+# Docker (Sprint 2): these are pre-installed during the image build and
+# the models are pre-downloaded via download_models.py.
+
+# ── NLP / NER ─────────────────────────────────────────────────────────────
+spacy>=3.5,<4.0
+spacy-transformers>=1.3,<2.0
+
+# ── Document parsing ─────────────────────────────────────────────────────
 python-docx>=0.8.11
 PyPDF2>=3.0.0
-sentence-transformers>=2.2.2
-scikit-learn>=1.3.0
+
+# ── OCR (optional — required only for scanned PDF CVs) ───────────────────
 pytesseract>=0.3.10
 pdf2image>=1.16.0
 Pillow>=9.0.0
-poppler-utils>=0.1.0
-keybert>=0.7.0          # optional — enhances skill extraction; safe to omit
+
+# ── Semantic ranking ──────────────────────────────────────────────────────
+sentence-transformers>=2.2.2
+scikit-learn>=1.3.0
+torch>=2.0.0
+
+# ── Keyword extraction (optional — enhances skill extraction) ────────────
+keybert>=0.7.0
+
+# ── Web dashboard ────────────────────────────────────────────────────────
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# ── Progress bars ────────────────────────────────────────────────────────
+tqdm>=4.65.0
+
+# ── Testing (dev only) ────────────────────────────────────────────────────
+pytest>=7.4.0
+pytest-cov>=4.1.0
