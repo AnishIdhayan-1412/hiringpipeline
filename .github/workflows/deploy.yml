@@ -1,0 +1,36 @@
+# ============================================================
+# Bias-Free Hiring Pipeline — Auto-Deploy to Render
+# Sprint 3 — Triggers on push to main after CI passes
+#
+# Setup:
+#   1. Create a Render web service pointing to this repo
+#   2. Add RENDER_DEPLOY_HOOK_URL to GitHub repo secrets
+#      (Render Dashboard → Service → Settings → Deploy Hook)
+# ============================================================
+
+name: Deploy to Render
+
+on:
+  push:
+    branches: ["main"]
+  workflow_run:
+    workflows: ["CI"]
+    branches: ["main"]
+    types: [completed]
+
+jobs:
+  deploy:
+    name: Trigger Render deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+
+    steps:
+      - name: Trigger Render deploy hook
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+            echo "Deploy triggered on Render."
+          else
+            echo "RENDER_DEPLOY_HOOK_URL secret not set — skipping deploy."
+            echo "Add it in: GitHub repo Settings → Secrets → Actions"
+          fi

@@ -1,0 +1,50 @@
+# ============================================================
+# Bias-Free Hiring Pipeline — Render Service Definition
+# Sprint 3 — Free-tier web service on render.com
+#
+# Deploy steps:
+#   1. Push this file to the main branch
+#   2. Go to https://dashboard.render.com → New → Blueprint
+#   3. Connect your GitHub repo — Render auto-detects this file
+#   4. Click "Apply" — done!
+#
+# Or use the "Deploy to Render" button in README.md
+# ============================================================
+
+services:
+  - type: web
+    name: bias-free-hiring-pipeline
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+
+    # Free tier (512 MB RAM, shared CPU, spins down after 15 min idle)
+    plan: free
+
+    # Port the container listens on
+    port: 5000
+
+    # Health check — Render pings this to decide if deploy succeeded
+    healthCheckPath: /health
+
+    # Build args
+    dockerBuildArgs:
+      # Use small spaCy model on free tier to stay within 512 MB RAM
+      SKIP_LARGE_MODELS: "1"
+
+    # Environment variables
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: HF_HOME
+        value: /opt/models/huggingface
+      - key: SENTENCE_TRANSFORMERS_HOME
+        value: /opt/models/sentence_transformers
+
+    # Persistent disk — stores the SQLite database and pipeline outputs
+    disk:
+      name: pipeline-data
+      mountPath: /app/data
+      sizeGB: 1   # free tier max

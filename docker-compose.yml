@@ -1,0 +1,83 @@
+# ============================================================
+# Bias-Free Hiring Pipeline — docker-compose.yml
+# Sprint 2 — Local development and testing
+#
+# Usage:
+#   docker compose up --build          # build + start
+#   docker compose up -d               # detached mode
+#   docker compose logs -f pipeline    # tail logs
+#   docker compose down -v             # stop + remove volumes
+#
+# Skip large model download (faster CI builds):
+#   SKIP_LARGE_MODELS=1 docker compose build
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ── Main pipeline + dashboard ───────────────────────────────
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SKIP_LARGE_MODELS: ${SKIP_LARGE_MODELS:-0}
+    image: hiring-pipeline:latest
+    container_name: hiring-pipeline
+    restart: unless-stopped
+    ports:
+      - "${FLASK_PORT:-5000}:5000"
+
+    # Persistent data volumes — survive container restarts
+    volumes:
+      - raw_cvs:/app/raw_cvs
+      - pipeline_data:/app/data
+      - audit_logs:/app/audit
+      - app_logs:/app/logs
+
+    environment:
+      # Flask settings
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - FLASK_PORT=5000
+
+      # Pipeline settings
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+
+      # Model cache (already baked into image — these are read-only references)
+      - HF_HOME=/opt/models/huggingface
+      - SENTENCE_TRANSFORMERS_HOME=/opt/models/sentence_transformers
+      - TRANSFORMERS_CACHE=/opt/models/huggingface
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+    # Resource limits — keeps the free Render/Railway tier happy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+# ── Named volumes ────────────────────────────────────────────
+volumes:
+  raw_cvs:
+    driver: local
+  pipeline_data:
+    driver: local
+  audit_logs:
+    driver: local
+  app_logs:
+    driver: local
