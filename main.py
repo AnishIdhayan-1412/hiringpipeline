@@ -33,6 +33,7 @@ import module3
 import module4
 from exceptions import ConfigurationError
 from pipeline_logging import configure_logging
+from database import get_db
 
 # ──────────────────────────────────────────────────────────────────────────
 # Default paths
@@ -248,6 +249,35 @@ def main() -> None:
     print("  PIPELINE COMPLETE")
     print("*" * 60)
     print()
+
+    # ── Persist run to SQLite database ────────────────────────────────────
+    try:
+        import module1 as _m1
+        _ranker  = _m1.load_ranker()
+        _db      = get_db()
+        _run_id  = _db.get_latest_run_id()
+
+        # Save ranking + candidate records if a run already exists from module5,
+        # otherwise create a new one for CLI invocations.
+        if not _run_id or _db.get_run(_run_id).get("status") not in ("running",):
+            import datetime as _dt
+            _run_id = _dt.datetime.now().strftime("RUN_%Y%m%d_%H%M%S")
+            jd_text = ""
+            if args.jd_file and os.path.isfile(args.jd_file):
+                with open(args.jd_file, "r", encoding="utf-8") as _f:
+                    jd_text = _f.read()
+            _db.create_run(_run_id, jd_file=args.jd_file, jd_text=jd_text)
+
+        if _ranker.last_ranking_details:
+            _db.save_ranking(_run_id, _ranker.last_ranking_details)
+
+        # Count processed CVs
+        _total = sum(1 for f in os.listdir(args.output_dir)
+                     if f.endswith(".txt")) if os.path.isdir(args.output_dir) else 0
+        _db.finish_run(_run_id, exit_code=0, total_cvs=_total)
+        print(f"  DB run persisted → {_run_id}")
+    except Exception as _db_exc:
+        logging.getLogger(__name__).warning("DB persist skipped: %s", _db_exc)
 
     # ── Stage 5 : Web Dashboard ────────────────────────────────────────
     if args.dashboard:

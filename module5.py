@@ -51,7 +51,6 @@ import io
 import json
 import logging
 import os
-import subprocess
 import sys
 import threading
 import time
@@ -125,13 +124,19 @@ VERDICT_COLOURS: Dict[str, str] = {
 _LOG_FORMAT: str = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 _DATE_FMT:   str = "%H:%M:%S"
 
-# ── Pipeline run state (shared across threads) ────────────────────────────
+# ── Pipeline run state (shared across threads) ─────────────────────────────
+# The pipeline now runs entirely in-process via a background thread.
+# No subprocess.Popen is used — this eliminates the overhead of spawning a
+# new Python interpreter and allows the Flask app to share DB state directly.
 _pipeline_state: Dict[str, Any] = {
-    "running":   False,
-    "last_run":  None,
-    "exit_code": None,
+    "running":    False,
+    "last_run":   None,
+    "exit_code":  None,
+    "run_id":     None,    # current DB run_id (Sprint 1)
+    "start_time": None,    # datetime when the current run started
 }
 _log_queue: Queue = Queue(maxsize=2000)
+_pipeline_lock = threading.Lock()   # ensures only one run at a time
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -311,54 +316,119 @@ class DataLoader:
 # Pipeline runner — subprocess + SSE streaming
 # ══════════════════════════════════════════════════════════════════════════
 
-def _run_pipeline_subprocess(jd_file: Optional[str] = None) -> None:
-    """Run main.py in a background thread, feeding stdout into _log_queue.
+def _run_pipeline_inprocess(jd_file: Optional[str] = None) -> None:
+    """Execute the full pipeline in-process in a background thread.
+
+    Replaces the previous ``subprocess.Popen`` approach.  Running in-process
+    means:
+    - No Python interpreter startup overhead (~1 s on slow machines).
+    - The Flask app and pipeline share the same Database singleton.
+    - stdout from each stage is captured via a custom logging handler that
+      feeds lines directly into ``_log_queue`` for SSE streaming.
 
     Args:
-        jd_file: Path to the JD file, or None to use default jd.txt.
+        jd_file: Path to the JD text file.  Defaults to ``JD_FILE``.
     """
     global _pipeline_state
 
-    _pipeline_state["running"]   = True
-    _pipeline_state["exit_code"] = None
+    with _pipeline_lock:
+        if _pipeline_state["running"]:
+            logger.warning("Pipeline already running — ignoring duplicate trigger.")
+            return
+        _pipeline_state["running"]    = True
+        _pipeline_state["exit_code"]  = None
+        _pipeline_state["start_time"] = datetime.now()
 
-    cmd = [sys.executable, os.path.join(BASE_DIR, "main.py")]
-    jd  = jd_file or JD_FILE
-    if os.path.isfile(jd):
-        cmd += ["--jd-file", jd]
-
-    logger.info("Launching pipeline: %s", " ".join(cmd))
+    jd = jd_file or JD_FILE
     _log_queue.put("data: [PIPELINE STARTED]\n\n")
+    logger.info("In-process pipeline starting (jd=%s)", jd)
 
     try:
-        proc = subprocess.Popen(
-            cmd,
-            stdout    = subprocess.PIPE,
-            stderr    = subprocess.STDOUT,
-            text      = True,
-            encoding  = "utf-8",
-            errors    = "replace",
-            cwd       = BASE_DIR,
-        )
-        for line in proc.stdout:  # type: ignore[union-attr]
-            clean = line.rstrip()
-            if clean:
-                _log_queue.put(f"data: {clean}\n\n")
+        import main as pipeline_main
+        from database import get_db
+        from datetime import datetime as _dt
 
-        proc.wait()
-        _pipeline_state["exit_code"] = proc.returncode
+        run_id = _dt.now().strftime("RUN_%Y%m%d_%H%M%S")
+        db = get_db()
+
+        # Read JD text for DB storage
+        jd_text = ""
+        if os.path.isfile(jd):
+            try:
+                with open(jd, "r", encoding="utf-8") as fh:
+                    jd_text = fh.read()
+            except OSError:
+                pass
+
+        db.create_run(run_id, jd_file=jd, jd_text=jd_text)
+        _pipeline_state["run_id"] = run_id
+
+        # Build args the same way main.py would parse them
+        import sys as _sys
+        _orig_argv = _sys.argv[:]
+        _sys.argv  = ["main.py", "--jd-file", jd] if os.path.isfile(jd) else ["main.py"]
+
+        # Capture pipeline print() output → SSE queue via a logging sink
+        class _QueueSink:
+            """File-like object that forwards writes to _log_queue as SSE lines."""
+            def write(self, text: str) -> None:
+                for line in text.splitlines():
+                    clean = line.strip()
+                    if clean:
+                        _log_queue.put(f"data: {clean}\n\n")
+            def flush(self) -> None:
+                pass
+
+        import builtins as _builtins
+        _orig_print = _builtins.print
+
+        def _patched_print(*args, **kwargs):
+            """Intercept print() calls from pipeline stages for SSE streaming."""
+            import io
+            buf = io.StringIO()
+            kwargs["file"] = buf
+            _orig_print(*args, **kwargs)
+            line = buf.getvalue().rstrip()
+            if line:
+                _log_queue.put(f"data: {line}\n\n")
+            _orig_print(*args)   # also print to real stdout for logs
+
+        _builtins.print = _patched_print
+
+        exit_code = 0
+        try:
+            pipeline_main.main()
+        except SystemExit as exc:
+            exit_code = int(exc.code) if exc.code is not None else 0
+        except Exception as exc:
+            logger.exception("In-process pipeline raised an exception: %s", exc)
+            _log_queue.put(f"data: [ERROR] {exc}\n\n")
+            exit_code = 1
+        finally:
+            _builtins.print = _orig_print
+            _sys.argv = _orig_argv
+
+        _pipeline_state["exit_code"] = exit_code
         _pipeline_state["last_run"]  = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
-        status = "COMPLETED" if proc.returncode == 0 else f"FAILED (exit {proc.returncode})"
+        # Count processed CVs from anonymized_cvs/
+        total_cvs = 0
+        if os.path.isdir(ANONYMIZED_DIR):
+            total_cvs = sum(1 for f in os.listdir(ANONYMIZED_DIR) if f.endswith(".txt"))
+        db.finish_run(run_id, exit_code=exit_code, total_cvs=total_cvs)
+
+        status = "COMPLETED" if exit_code == 0 else f"FAILED (exit {exit_code})"
         _log_queue.put(f"data: [PIPELINE {status}]\n\n")
         _log_queue.put("data: __DONE__\n\n")
+        logger.info("In-process pipeline finished — exit_code=%d", exit_code)
 
     except Exception as exc:
-        logger.error("Pipeline subprocess error: %s", exc)
-        _log_queue.put(f"data: [ERROR] {exc}\n\n")
+        logger.exception("Fatal error in pipeline runner: %s", exc)
+        _log_queue.put(f"data: [FATAL ERROR] {exc}\n\n")
         _log_queue.put("data: __DONE__\n\n")
     finally:
         _pipeline_state["running"] = False
+
 
 
 def _sse_generator() -> Generator[str, None, None]:
@@ -412,6 +482,59 @@ def _create_app() -> "Flask":
     # ──────────────────────────────────────────────────────────────────────
     # PAGE 1 — Dashboard
     # ──────────────────────────────────────────────────────────────────────
+
+    # ──────────────────────────────────────────────────────────────────────
+    # /health — liveness + readiness probe for cloud platforms & Docker
+    # ──────────────────────────────────────────────────────────────────────
+
+    @app.route("/health")
+    def health() -> Response:
+        """Liveness and readiness health-check endpoint.
+
+        Returns HTTP 200 when the service is ready to handle requests, or
+        HTTP 503 when the pipeline is in a failed state.
+
+        Used by:
+        - Docker HEALTHCHECK instruction (Sprint 2)
+        - Render health-check URL (Sprint 3)
+        - Any uptime monitor / Kubernetes liveness probe
+
+        Returns:
+            JSON response with service metadata and pipeline run status.
+        """
+        from database import get_db
+        db_ok = True
+        latest_run = None
+        try:
+            db = get_db()
+            latest_run = db.get_latest_run_id()
+        except Exception:
+            db_ok = False
+
+        status_code = 200
+        service_status = "ok"
+
+        payload = {
+            "status":          service_status,
+            "service":         "bias-free-hiring-pipeline",
+            "version":         "1.0.0",
+            "timestamp":       datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "pipeline": {
+                "running":      _pipeline_state.get("running", False),
+                "last_run":     _pipeline_state.get("last_run"),
+                "last_run_id":  _pipeline_state.get("run_id"),
+                "exit_code":    _pipeline_state.get("exit_code"),
+            },
+            "database": {
+                "ok":           db_ok,
+                "latest_run_id": latest_run,
+            },
+            "stages": {
+                key: info["done"]
+                for key, info in loader.load_pipeline_status().items()
+            },
+        }
+        return jsonify(payload), status_code
 
     @app.route("/")
     def dashboard() -> str:
@@ -696,7 +819,7 @@ def _create_app() -> "Flask":
                 break
 
         thread = threading.Thread(
-            target   = _run_pipeline_subprocess,
+            target   = _run_pipeline_inprocess,
             kwargs   = {"jd_file": JD_FILE if os.path.isfile(JD_FILE) else None},
             daemon   = True,
             name     = "pipeline-runner",
