@@ -1027,13 +1027,13 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--host",
         default = FLASK_HOST,
-        help    = f"Host to bind to (default: {DEFAULT_HOST})",
+        help    = f"Host to bind to (default: {FLASK_HOST})",
     )
     p.add_argument(
         "--port",
         type    = int,
         default = FLASK_PORT,
-        help    = f"Port to listen on (default: {DEFAULT_PORT})",
+        help    = f"Port to listen on (default: {FLASK_PORT})",
     )
     p.add_argument(
         "--debug",
