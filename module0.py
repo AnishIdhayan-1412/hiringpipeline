@@ -1125,6 +1125,30 @@ def read_cv_file(filepath: str) -> str:
 # Batch processing — called by main.py or standalone
 # ═════════════════════════════════════════════
 
+# ═════════════════════════════════════════════
+# Duplicate CV Detection
+# ═════════════════════════════════════════════
+
+def detect_duplicate_cv(
+    new_cv_text: str,
+    existing_texts: dict,
+    threshold: float = 0.92,
+):
+    """Return the candidate_id of a near-duplicate CV, or None.
+
+    Uses Python difflib SequenceMatcher — no extra dependencies.
+    Two CVs with >= 92% text overlap are treated as duplicates.
+    """
+    from difflib import SequenceMatcher
+    normalised = " ".join(new_cv_text.lower().split())
+    for cid, existing in existing_texts.items():
+        norm_existing = " ".join(existing.lower().split())
+        if SequenceMatcher(None, normalised, norm_existing, autojunk=True).quick_ratio() >= threshold:
+            if SequenceMatcher(None, normalised, norm_existing).ratio() >= threshold:
+                return cid
+    return None
+
+
 def run(
     input_dir: str,
     output_dir: str,
@@ -1171,7 +1195,9 @@ def run(
     print()
 
     master_vault: Dict[str, Any] = {}
+    processed_texts: Dict[str, str] = {}
     success = 0
+    skipped_duplicates: List[str] = []
     failed_files: List[str] = []
     t0 = time.time()
 
@@ -1195,10 +1221,18 @@ def run(
                     error_log.write(f"SKIPPED (empty): {fname}\n")
                     continue
 
+                dup_id = detect_duplicate_cv(cv_text, processed_texts)
+                if dup_id:
+                    logger.warning("Skipping duplicate of %s: %s", dup_id, fname)
+                    error_log.write(f"DUPLICATE ({fname}): near-copy of {dup_id}\n")
+                    skipped_duplicates.append(fname)
+                    continue
+
                 result = anonymizer.anonymize(cv_text, candidate_id=candidate_id, level=level)
 
                 with open(os.path.join(output_dir, f"{candidate_id}.txt"), 'w', encoding='utf-8') as f:
                     f.write(result['anonymized_cv'])
+                processed_texts[candidate_id] = result['anonymized_cv']
 
                 vault_data = result['vault_data']
                 vault_data['original_filename'] = fname
@@ -1226,6 +1260,8 @@ def run(
 
     elapsed = time.time() - t0
     print(f"\n  Done: {success}/{total} CVs anonymized in {elapsed:.1f}s")
+    if skipped_duplicates:
+        print(f"  Duplicates skipped ({len(skipped_duplicates)}): {', '.join(skipped_duplicates)}")
     if failed_files:
         print(f"  Failed: {', '.join(failed_files)}")
         print(f"  See error log: {error_log_path}")

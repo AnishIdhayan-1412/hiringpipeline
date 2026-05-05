@@ -83,16 +83,15 @@ logger = logging.getLogger(__name__)
 # Constants
 # ══════════════════════════════════════════════════════════════════════════
 
-BASE_DIR:           str = os.path.dirname(os.path.abspath(__file__))
+from config import (
+    FLASK_HOST, FLASK_PORT, SECRET_KEY, BASE_DIR,
+    RAW_CVS_DIR, ANONYMIZED_DIR, PARSED_DIR, VAULT_DIR,
+    EXPLANATIONS_DIR, AUDIT_DIR,
+    MAX_UPLOAD_BYTES, ALLOWED_CV_EXTENSIONS,
+    RATE_LIMIT_PIPELINE, RATE_LIMIT_UPLOAD,
+)
 
-# ── Pipeline directory paths (all relative to BASE_DIR) ──────────────────
-RAW_CVS_DIR:        str = os.path.join(BASE_DIR, "raw_cvs")
-ANONYMIZED_DIR:     str = os.path.join(BASE_DIR, "anonymized_cvs")
-PARSED_DIR:         str = os.path.join(BASE_DIR, "parsed")
-VAULT_DIR:          str = os.path.join(BASE_DIR, "vault")
-EXPLANATIONS_DIR:   str = os.path.join(BASE_DIR, "explanations")
-AUDIT_DIR:          str = os.path.join(BASE_DIR, "audit")
-TEMPLATES_DIR:      str = os.path.join(BASE_DIR, "templates")
+TEMPLATES_DIR: str = os.path.join(BASE_DIR, "templates")
 
 # ── Key data files ────────────────────────────────────────────────────────
 JD_FILE:            str = os.path.join(BASE_DIR, "jd.txt")
@@ -106,11 +105,9 @@ BIAS_REPORT_FILE:   str = os.path.join(AUDIT_DIR,   "bias_report.txt")
 SHA256_FILE:        str = os.path.join(AUDIT_DIR,   "audit_log.sha256")
 
 # ── Allowed upload extensions ─────────────────────────────────────────────
-ALLOWED_CV_EXTENSIONS: frozenset = frozenset({".pdf", ".docx", ".txt"})
+# ALLOWED_CV_EXTENSIONS imported from config
 
 # ── Server defaults ───────────────────────────────────────────────────────
-DEFAULT_HOST:   str = "127.0.0.1"
-DEFAULT_PORT:   int = 5000
 
 # ── Verdict colour mapping ────────────────────────────────────────────────
 VERDICT_COLOURS: Dict[str, str] = {
@@ -462,7 +459,14 @@ def _create_app() -> "Flask":
         __name__,
         template_folder = TEMPLATES_DIR,
     )
-    app.secret_key = "bias-free-hiring-pipeline-2024"
+    app.secret_key = SECRET_KEY
+
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=[],
+        storage_uri="memory://",
+    )
 
     loader = DataLoader()
 
@@ -711,6 +715,7 @@ def _create_app() -> "Flask":
     # ──────────────────────────────────────────────────────────────────────
 
     @app.route("/api/upload-cvs", methods=["POST"])
+    @limiter.limit(RATE_LIMIT_UPLOAD)
     def api_upload_cvs() -> Response:
         """Accept multiple CV file uploads and save to raw_cvs/.
 
@@ -735,7 +740,15 @@ def _create_app() -> "Flask":
                 skipped += 1
                 continue
             try:
-                safe_name = os.path.basename(f.filename)
+                safe_name = secure_filename(f.filename)
+                if not safe_name:
+                    skipped += 1
+                    continue
+                f.stream.seek(0, 2)
+                if f.stream.tell() > MAX_UPLOAD_BYTES:
+                    skipped += 1
+                    continue
+                f.stream.seek(0)
                 f.save(os.path.join(RAW_CVS_DIR, safe_name))
                 saved += 1
             except OSError as exc:
@@ -797,6 +810,7 @@ def _create_app() -> "Flask":
     # ──────────────────────────────────────────────────────────────────────
 
     @app.route("/api/run-pipeline", methods=["POST"])
+    @limiter.limit(RATE_LIMIT_PIPELINE)
     def api_run_pipeline() -> Response:
         """Trigger a pipeline run and stream stdout as Server-Sent Events.
 
@@ -949,8 +963,8 @@ def _create_app() -> "Flask":
 # ══════════════════════════════════════════════════════════════════════════
 
 def run(
-    host:  str  = DEFAULT_HOST,
-    port:  int  = DEFAULT_PORT,
+    host:  str  = FLASK_HOST,
+    port:  int  = FLASK_PORT,
     debug: bool = False,
 ) -> None:
     """Start the Flask web dashboard server.
@@ -1012,13 +1026,13 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "--host",
-        default = DEFAULT_HOST,
+        default = FLASK_HOST,
         help    = f"Host to bind to (default: {DEFAULT_HOST})",
     )
     p.add_argument(
         "--port",
         type    = int,
-        default = DEFAULT_PORT,
+        default = FLASK_PORT,
         help    = f"Port to listen on (default: {DEFAULT_PORT})",
     )
     p.add_argument(

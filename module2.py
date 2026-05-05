@@ -66,10 +66,17 @@ logger = logging.getLogger(__name__)
 # Changing a threshold means changing exactly one line.
 # ══════════════════════════════════════════════════════════════════════════
 
-# ── Verdict thresholds ────────────────────────────────────────────────────
-VERDICT_STRONG:  float = 0.75
-VERDICT_GOOD:    float = 0.55
-VERDICT_PARTIAL: float = 0.40
+# ── Verdict thresholds — role-aware (set ROLE_LEVEL=junior/mid/senior) ──────
+from config import VERDICT_THRESHOLDS, DEFAULT_ROLE_LEVEL
+
+def _get_thresholds(role_level: str = DEFAULT_ROLE_LEVEL) -> dict:
+    """Return score thresholds for the given role level (junior/mid/senior)."""
+    return VERDICT_THRESHOLDS.get(role_level, VERDICT_THRESHOLDS["mid"])
+
+_T            = _get_thresholds()
+VERDICT_STRONG:  float = _T["strong"]
+VERDICT_GOOD:    float = _T["good"]
+VERDICT_PARTIAL: float = _T["partial"]
 
 # ── Score label thresholds ────────────────────────────────────────────────
 LABEL_EXCELLENT: float = 0.80
