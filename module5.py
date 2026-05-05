@@ -70,9 +70,16 @@ try:
         stream_with_context,
         url_for,
     )
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+    from werkzeug.utils import secure_filename
     _FLASK_AVAILABLE = True
 except ImportError:
     _FLASK_AVAILABLE = False
+    # Stubs so NameError doesn't occur even without flask installed
+    Limiter = None
+    get_remote_address = None
+    secure_filename = lambda f: f
 
 # ══════════════════════════════════════════════════════════════════════════
 # Module-level logger
