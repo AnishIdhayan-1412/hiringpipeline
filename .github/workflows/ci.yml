@@ -46,7 +46,7 @@ jobs:
           pip install pytest pytest-cov
           # Install only lightweight deps needed for unit tests
           # (avoids downloading 500 MB of ML models in CI)
-          pip install flask flask-cors tqdm
+          pip install flask flask-cors flask-limiter werkzeug tqdm
 
       - name: Run unit tests
         run: |
